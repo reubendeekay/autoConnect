@@ -8,6 +8,8 @@ AutoConnect is a mobile app that connects drivers to mechanics easily.
 <br>
 The app incoporates features such as:
 <br>
+# Features
+<br>
 # In-app Map dicovery and navigation
 <br>
 # Online payments via Mpesa
@@ -17,7 +19,11 @@ The app incoporates features such as:
 # Curated recommendations based on location
 <br>
 
+<br>
+# Technologies
 The app is developed using the following tools:
+
+
 <br>
 # Flutter and Dart
 <br>
