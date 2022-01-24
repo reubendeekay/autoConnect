@@ -20,7 +20,9 @@ The app incoporates features such as:
 <br>
 
 <br>
+
 # Technologies
+</br>
 <br>
 The app is developed using the following tools:
 <br>
