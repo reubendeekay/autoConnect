@@ -26,9 +26,9 @@ The app incoporates features such as:
 <br>
 The app is developed using the following tools:
 <br>
-# Flutter and Dart
+<b>Flutter and Dart</b>
 <br>
-# Firebase:
+<b>Firebase:</b>
 
 <br>
   Cloud fiestore for as the database
@@ -39,7 +39,7 @@ The app is developed using the following tools:
   <br>
   Cloud storage for file Storage
   <br>
-# Google Maps SDK
+<b> Google Maps SDK</b>
 <br>
    Static Maps API
    <br>
