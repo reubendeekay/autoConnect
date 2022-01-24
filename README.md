@@ -47,7 +47,7 @@ The app is developed using the following tools:
    <br>
    Places API
    <br>
-# To be implemented:
+<b>To be implemented:</b>
 <br>
     Traditional Node JS API
 
