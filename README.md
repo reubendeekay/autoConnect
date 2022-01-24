@@ -21,9 +21,8 @@ The app incoporates features such as:
 
 <br>
 # Technologies
+<br>
 The app is developed using the following tools:
-
-
 <br>
 # Flutter and Dart
 <br>
