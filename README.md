@@ -15,16 +15,29 @@ The app is developed using the following tools:
 <br>
 **Flutter and Dart
 </br>
+
+<br>
 **Firebase:
+</br>
+<br>
   Cloud fiestore for as the database
+  <br>
   Realtime database to compelement Cloud firestore
+  <br>
   Cloud functions(Node Js) to enable serverless API
+  <br>
   Cloud storage for file Storage
+  <br>
 **Google Maps SDK
+<br>
    Static Maps API
+   <br>
    Directions API
+   <br>
    Places API
+   <br>
 **To be implemented:
+<br>
     Traditional Node JS API
 
 <!-- A few resources to get you started if this is your first Flutter project:
