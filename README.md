@@ -31,7 +31,7 @@ The app is developed using the following tools:
 <b>Firebase:</b>
 
 <br>
-  Cloud fiestore for as the database
+  Cloud firestore for as the database
   <br>
   Realtime database to compelement Cloud firestore
   <br>
