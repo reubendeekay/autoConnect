@@ -12,7 +12,9 @@ The app incoporates features such as:
 **Curated recommendations based on location
 
 The app is developed using the following tools:
+<br>
 **Flutter and Dart
+</br>
 **Firebase:
   Cloud fiestore for as the database
   Realtime database to compelement Cloud firestore
