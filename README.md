@@ -5,20 +5,24 @@ A new Flutter project.
 ## About
 
 AutoConnect is a mobile app that connects drivers to mechanics easily.
+<br>
 The app incoporates features such as:
-**In-app Map dicovery and navigation
-**Online payments via Mpesa
-**Easy registration of Mechanics
-**Curated recommendations based on location
+<br>
+# In-app Map dicovery and navigation
+<br>
+# Online payments via Mpesa
+<br>
+# Easy registration of Mechanics
+<br>
+# Curated recommendations based on location
+<br>
 
 The app is developed using the following tools:
 <br>
-**Flutter and Dart
-</br>
-
+# Flutter and Dart
 <br>
-**Firebase:
-</br>
+# Firebase:
+
 <br>
   Cloud fiestore for as the database
   <br>
@@ -28,7 +32,7 @@ The app is developed using the following tools:
   <br>
   Cloud storage for file Storage
   <br>
-**Google Maps SDK
+# Google Maps SDK
 <br>
    Static Maps API
    <br>
@@ -36,7 +40,7 @@ The app is developed using the following tools:
    <br>
    Places API
    <br>
-**To be implemented:
+# To be implemented:
 <br>
     Traditional Node JS API
 
