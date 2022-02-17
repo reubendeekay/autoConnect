@@ -7,12 +7,13 @@ class MechanicModel {
   final String? profile;
   final File? profileFile;
   List<dynamic>? images = [];
-  List< File>? fileImages = [];
+  List<File>? fileImages = [];
   final String? phone;
   final String? description;
   final String? openingTime;
   final String? closingTime;
   final String? address;
+  //FIREBASE CLASS FOR LONGITUDE AND LATITUDE
   final GeoPoint? location;
   final String? id;
   List<ServicesModel>? services = [];
@@ -40,11 +41,10 @@ class ServicesModel {
 
   ServicesModel({this.serviceName, this.price});
 
-Map toJson() {
-  return {
-    'serviceName': serviceName,
-    'price': price,
-  
-};
-}
+  Map toJson() {
+    return {
+      'serviceName': serviceName,
+      'price': price,
+    };
+  }
 }

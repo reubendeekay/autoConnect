@@ -23,7 +23,7 @@ class MapAppBar extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(2)),
                   child: Container(
-                    padding: const EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(7),
                     child: const Icon(
                       Icons.menu,
                       size: 24,
@@ -31,23 +31,23 @@ class MapAppBar extends StatelessWidget {
                   ),
                 ),
               ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () {
-                  Get.to(() => const NotificationsScreen());
-                },
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2)),
-                  child: Container(
-                    padding: const EdgeInsets.all(6),
-                    child: const Icon(
-                      Icons.notifications,
-                      size: 24,
-                    ),
-                  ),
-                ),
-              ),
+              // const Spacer(),
+              // GestureDetector(
+              //   onTap: () {
+              //     Get.to(() => const NotificationsScreen());
+              //   },
+              //   child: Card(
+              //     shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(2)),
+              //     child: Container(
+              //       padding: const EdgeInsets.all(6),
+              //       child: const Icon(
+              //         Icons.notifications,
+              //         size: 24,
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           const MapSearchWidget()

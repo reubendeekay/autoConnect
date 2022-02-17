@@ -32,10 +32,12 @@ class _InitialLoadingScreenState extends State<InitialLoadingScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<LocationProvider>(context, listen: false)
-        .getCurrentLocation()
-        .then((_) =>
-            Navigator.of(context).pushReplacementNamed(Homepage.routeName));
+    Future.delayed(Duration.zero, () async {
+      await Provider.of<LocationProvider>(context, listen: false)
+          .getCurrentLocation()
+          .then((_) =>
+              Navigator.of(context).pushReplacementNamed(Homepage.routeName));
+    });
   }
 
   @override

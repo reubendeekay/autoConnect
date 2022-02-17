@@ -4,7 +4,6 @@ import 'package:mechanic/screens/my_boookings/my_booking_details.dart';
 
 class FavouritesTile extends StatelessWidget {
   const FavouritesTile({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -12,7 +11,7 @@ class FavouritesTile extends StatelessWidget {
         Get.to(() => const MyBookingDetails());
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 7.5),
+        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 6.5),
         decoration: BoxDecoration(
           color: Colors.blueGrey[50],
           borderRadius: BorderRadius.circular(5),

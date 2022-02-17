@@ -12,10 +12,14 @@ class AuthProvider with ChangeNotifier {
   bool isOnline = false;
   MechanicModel? _mechanic;
   MechanicModel? get mechanic => _mechanic;
+  //STEP 1
 
   Future<void> login({String? email, String? password}) async {
+//FIREBASE LOGIN WITH EMAIL AND PASSWORD
+
     final UserCredential _currentUser = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email!, password: password!);
+
     await FirebaseMessaging.instance.getToken().then((token) {
       print('token: $token');
       FirebaseFirestore.instance
@@ -36,29 +40,37 @@ class AuthProvider with ChangeNotifier {
       String? password,
       String? fullName,
       String? phoneNumber}) async {
+    //FIREBASE SIGNUP WITH EMAIL AND PASSWORD
     final UserCredential _currentUser = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email!, password: password!);
 
+//ENTERING USER DATA TO THE DATABASE FIRESTORE VIA SET METHOD
     await FirebaseFirestore.instance
         .collection('users')
         .doc(_currentUser.user!.uid)
-        .set({
-      'userId': _currentUser.user!.uid,
-      'email': email,
-      'favourites': [],
-      'password': password,
-      'fullName': fullName,
-      'isOnline': true,
-      'lastSeen': Timestamp.now().millisecondsSinceEpoch,
-      'isAdmin': false,
-      'isMechanic': false,
-      'phoneNumber': phoneNumber,
-      'address': '',
-      'profilePic':
-          'https://www.theupcoming.co.uk/wp-content/themes/topnews/images/tucuser-avatar-new.png',
-      'dateOfBirth': null,
-      'nationalId': '',
-    });
+        .set(
+
+            //set
+            //update/
+            //delete
+            // 'key':value
+            {
+          'userId': _currentUser.user!.uid,
+          'email': email,
+          'favourites': [],
+          'password': password,
+          'fullName': fullName,
+          'isOnline': true,
+          'lastSeen': Timestamp.now().millisecondsSinceEpoch,
+          'isAdmin': false,
+          'isMechanic': false,
+          'phoneNumber': phoneNumber,
+          'address': '',
+          'profilePic':
+              'https://www.theupcoming.co.uk/wp-content/themes/topnews/images/tucuser-avatar-new.png',
+          'dateOfBirth': null,
+          'nationalId': '',
+        });
     await FirebaseMessaging.instance.getToken().then((token) {
       FirebaseFirestore.instance
           .collection('users')
@@ -71,9 +83,11 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> getCurrentUser(String userId) async {
+    //GETTING USER DETAILS OF CURRENT USER IN SESSION
+
     final _currentUser =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
-
+//mapping the fetched user data from the database to A USER MODEL
     _user = UserModel(
         email: _currentUser['email'],
         fullName: _currentUser['fullName'],

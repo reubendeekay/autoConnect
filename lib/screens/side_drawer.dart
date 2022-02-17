@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/providers/auth_provider.dart';
+import 'package:mechanic/screens/auth/auth_screen.dart';
 import 'package:mechanic/screens/chat/chat_screen.dart';
+import 'package:get/route_manager.dart';
+
 import 'package:mechanic/screens/favourites/favourites_screen.dart';
 import 'package:mechanic/screens/home/homepage.dart';
 import 'package:mechanic/screens/mechanic/mechanic_dashboard.dart';
@@ -10,6 +14,7 @@ import 'package:mechanic/screens/mechanic/mechanic_register_screen.dart';
 import 'package:mechanic/screens/my_boookings/my_bookings.dart';
 import 'package:mechanic/screens/notifications/notifications_screen.dart';
 import 'package:mechanic/screens/user/user_profile.dart';
+import 'package:mechanic/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 class SideDrawer extends StatefulWidget {
@@ -23,8 +28,7 @@ class _SideDrawerState extends State<SideDrawer> {
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-
-final isMechanic=Provider.of<AuthProvider>(context).user!.isMechanic;
+    final isMechanic = Provider.of<AuthProvider>(context).user!.isMechanic;
 
     List<Map<String, dynamic>> options = [
       {
@@ -53,9 +57,11 @@ final isMechanic=Provider.of<AuthProvider>(context).user!.isMechanic;
         'screen': ChatScreen.routeName,
       },
       {
-        'title':isMechanic!?'Mechanic Dashboard': 'Become a Mechanic',
+        'title': isMechanic! ? 'Mechanic Dashboard' : 'Become a Mechanic',
         'icon': FontAwesomeIcons.car,
-        'screen':isMechanic?MechanicDashboard.routeName: MechanicRegisterScreen.routeName,
+        'screen': isMechanic
+            ? MechanicDashboard.routeName
+            : MechanicRegisterScreen.routeName,
       },
       {
         'title': 'Notifications',
@@ -74,7 +80,7 @@ final isMechanic=Provider.of<AuthProvider>(context).user!.isMechanic;
       },
       {
         'title': 'Log out',
-        'screen': null,
+        'screen': 'Log out',
         'icon': Icons.logout_outlined,
       }
     ];
@@ -92,6 +98,10 @@ final isMechanic=Provider.of<AuthProvider>(context).user!.isMechanic;
                       });
                       if (options[index]['screen'] == Homepage.routeName) {
                         Navigator.of(context).pop();
+                      } else if (options[index]['screen'] == 'Log out') {
+                        Navigator.of(context).pop();
+                        Get.off(() => const SplashVideoScreen());
+                        FirebaseAuth.instance.signOut();
                       } else {
                         // Navigator.of(context).pop();
 

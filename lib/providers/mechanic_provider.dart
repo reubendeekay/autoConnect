@@ -10,6 +10,7 @@ class MechanicProvider with ChangeNotifier {
     final results =
         await FirebaseFirestore.instance.collection('mechanics').get();
 
+//MAPPPING THE ARRAY OF MAPS FROM FIREBASE TO A MECHANIC MODEL
     _mechanics = results.docs
         .map<MechanicModel>((e) => MechanicModel(
               address: e['address'],
@@ -24,6 +25,7 @@ class MechanicProvider with ChangeNotifier {
               id: e.id,
             ))
         .toList();
+
     notifyListeners();
   }
 
@@ -31,7 +33,7 @@ class MechanicProvider with ChangeNotifier {
     final results =
         await FirebaseFirestore.instance.collection('mechanics').get();
 
-   final searchResults=results.docs
+    final searchResults = results.docs
         .where((element) =>
             element['name'].toLowerCase().contains(searchTerm.toLowerCase()) ||
             element['address']
@@ -47,7 +49,20 @@ class MechanicProvider with ChangeNotifier {
 
     notifyListeners();
 
-return  searchResults.map<MechanicModel>((e) => MechanicModel(
+// [
+//   {
+//     1: '1',
+//   }
+//   {
+//     2: '2',
+//   }
+// ]
+
+//MAPPING MECHANICS INTO A MECHANIC MODEL
+//e Represents each individual element in the array obtained from fetching data from Cloud Firestore
+
+    return searchResults
+        .map<MechanicModel>((e) => MechanicModel(
               address: e['address'],
               closingTime: e['closingTime'],
               openingTime: e['openingTime'],
@@ -58,7 +73,7 @@ return  searchResults.map<MechanicModel>((e) => MechanicModel(
               phone: e['phone'],
               name: e['name'],
               id: e.id,
-
-            )).toList();
+            ))
+        .toList();
   }
 }

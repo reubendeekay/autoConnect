@@ -2,6 +2,8 @@
     package="com.example.mechanic">
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+
+<uses-permission android:name="android.permission.INTERNET" />
 <queries>
 <!--   If your app opens https URLs   -->
 <intent>
@@ -28,7 +30,7 @@
         android:label="AutoConnect"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher" android:requestLegacyExternalStorage="true">
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AAIzaSyCm7wbIAPgdyx_MZjEG9fRwEO0xY3re5S0"/>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCEECT3Lkx_8crredHuI728tLDI5kWesjw"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

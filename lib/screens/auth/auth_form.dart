@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/helpers/loading_screen.dart';
 import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/screens/auth/input_widget.dart';
 import 'package:mechanic/screens/home/homepage.dart';

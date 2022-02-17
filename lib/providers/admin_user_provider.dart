@@ -6,12 +6,16 @@ import 'package:mechanic/models/mechanic_model.dart';
 
 class AdminUserProvider with ChangeNotifier {
   Future<void> registerMechanic(MechanicModel mech) async {
+    //GETTING USER ID OF CURRENT USER USING THE APP
     final uid = FirebaseAuth.instance.currentUser!.uid;
     List<String> imageUrls = [];
 
+//UPLOADING IMAGES TO FIREBASE STORAGE
     final profileResult = await FirebaseStorage.instance
         .ref('mechanics/$uid')
         .putFile(mech.profileFile!);
+
+    //getting url of image
     String profileUrl = await profileResult.ref.getDownloadURL();
 
     await Future.wait(mech.fileImages!.map((file) async {
@@ -21,6 +25,7 @@ class AdminUserProvider with ChangeNotifier {
       imageUrls.add(url);
     }).toList());
 
+//UPLOADING mechanic Data TO FIREBASE DATABASE
     await FirebaseFirestore.instance.collection('mechanics').doc(uid).set({
       'name': mech.name,
       'phone': mech.phone,

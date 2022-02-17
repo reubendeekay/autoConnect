@@ -12,6 +12,7 @@ class LocationProvider with ChangeNotifier {
   }
 
   Future<void> getCurrentLocation() async {
+    //using location package
     Location location = Location();
 
     bool _serviceEnabled;
@@ -34,10 +35,9 @@ class LocationProvider with ChangeNotifier {
       }
     }
 
+    //GETTING CURRENT LOCATION OF USER
+
     _locationData = await location.getLocation();
-    // location.onLocationChanged.listen((LocationData currentLocation) {
-    //   _locationData = currentLocation;
-    // });
 
     notifyListeners();
   }

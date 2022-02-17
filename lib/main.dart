@@ -5,7 +5,6 @@ import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mechanic/firebase_options.dart';
 import 'package:mechanic/helpers/constants.dart';
-import 'package:mechanic/helpers/loading_screen.dart';
 import 'package:mechanic/providers/admin_user_provider.dart';
 import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/providers/chat_provider.dart';
@@ -54,9 +53,8 @@ class MyApp extends StatelessWidget {
         // home: const SplashScreen(),
         home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (ctx, snap) => snap.hasData
-              ? const InitialLoadingScreen()
-              : const SplashScreen(),
+          builder: (ctx, snap) =>
+              snap.hasData ? const Homepage() : const SplashScreen(),
         ),
         routes: {
           Homepage.routeName: (ctx) => const Homepage(),
