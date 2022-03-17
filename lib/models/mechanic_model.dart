@@ -13,10 +13,10 @@ class MechanicModel {
   final String? openingTime;
   final String? closingTime;
   final String? address;
+  List<dynamic>? services = [];
   //FIREBASE CLASS FOR LONGITUDE AND LATITUDE
   final GeoPoint? location;
   final String? id;
-  List<ServicesModel>? services = [];
 
   MechanicModel({
     this.name,
@@ -33,18 +33,4 @@ class MechanicModel {
     this.images,
     this.services,
   });
-}
-
-class ServicesModel {
-  final String? serviceName;
-  final String? price;
-
-  ServicesModel({this.serviceName, this.price});
-
-  Map toJson() {
-    return {
-      'serviceName': serviceName,
-      'price': price,
-    };
-  }
 }

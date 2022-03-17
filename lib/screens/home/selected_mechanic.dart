@@ -165,8 +165,13 @@ class SelectedMechanicPrompt extends StatelessWidget {
             ),
           ),
         ),
-        const Positioned(
-            bottom: 15, left: 15, right: 15, child: RequestServiceButton())
+        Positioned(
+            bottom: 15,
+            left: 15,
+            right: 15,
+            child: RequestServiceButton(
+              mechanic: mechanic,
+            ))
       ],
     );
   }

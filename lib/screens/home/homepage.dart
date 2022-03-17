@@ -17,7 +17,8 @@ import 'package:mechanic/screens/side_drawer.dart';
 import 'package:provider/provider.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({Key? key}) : super(key: key);
+  Homepage({Key? key, this.opendrawer}) : super(key: key);
+  VoidCallback? opendrawer;
   static const routeName = '/home';
 
   @override
@@ -43,7 +44,7 @@ class _HomepageState extends State<Homepage> {
     for (var mechanic in mechanics!) {
       _markers.add(
         Marker(
-          markerId: const MarkerId('1'),
+          markerId: MarkerId(mechanic.id!),
           onTap: () {
             mapMechanicPrompt(context, mechanic);
           },
@@ -62,7 +63,7 @@ class _HomepageState extends State<Homepage> {
     setState(() {});
   }
 
-  final GlobalKey globalKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
   // @override
   // void initState() {
   //   super.initState();
@@ -81,7 +82,8 @@ class _HomepageState extends State<Homepage> {
         .getCurrentUser(FirebaseAuth.instance.currentUser!.uid);
 
     return Scaffold(
-      drawer: const SideDrawer(),
+      key: _key,
+      // drawer: const SideDrawer(),
       body: SafeArea(
         child: Stack(
           children: [
@@ -93,6 +95,7 @@ class _HomepageState extends State<Homepage> {
                     onMapCreated: _onMapCreated,
                     mapType: MapType.normal,
                     myLocationButtonEnabled: true,
+                    zoomControlsEnabled: true,
                     myLocationEnabled: true,
                     initialCameraPosition: CameraPosition(
                         target: LatLng(
@@ -100,18 +103,33 @@ class _HomepageState extends State<Homepage> {
                         zoom: 15),
                   ),
 
+            Container(
+              color: Colors.white,
+              margin: const EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: IconButton(
+                    onPressed: widget.opendrawer,
+                    icon: const Icon(
+                      Icons.menu,
+                      color: Colors.grey,
+                      size: 35,
+                    )),
+              ),
+            ),
+
             const Positioned(
               left: 0,
               right: 0,
-              top: 0,
+              bottom: 15,
               child: MapAppBar(),
             ),
-            const Positioned(
-              bottom: 15,
-              left: 0,
-              right: 0,
-              child: BottomMapWidget(),
-            )
+            // const Positioned(
+            //   bottom: 15,
+            //   left: 0,
+            //   right: 0,
+            //   child: BottomMapWidget(),
+            // )
           ],
         ),
       ),

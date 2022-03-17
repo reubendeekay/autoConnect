@@ -10,9 +10,12 @@ import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/providers/chat_provider.dart';
 import 'package:mechanic/providers/location_provider.dart';
 import 'package:mechanic/providers/mechanic_provider.dart';
+import 'package:mechanic/providers/payment_provider.dart';
 import 'package:mechanic/screens/chat/chat_screen.dart';
+import 'package:mechanic/screens/drawer/hidden_drawer.dart';
 import 'package:mechanic/screens/favourites/favourites_screen.dart';
 import 'package:mechanic/screens/home/homepage.dart';
+import 'package:mechanic/screens/mechanic/manage_bookings/manage_bookings_screen.dart';
 import 'package:mechanic/screens/mechanic/mechanic_dashboard.dart';
 import 'package:mechanic/screens/mechanic/mechanic_register_screen.dart';
 import 'package:mechanic/screens/my_boookings/my_bookings.dart';
@@ -42,6 +45,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: ChatProvider()),
         ChangeNotifierProvider.value(value: MechanicProvider()),
         ChangeNotifierProvider.value(value: AdminUserProvider()),
+        ChangeNotifierProvider.value(value: PaymentProvider()),
       ],
       child: GetMaterialApp(
         title: 'AutoConnect',
@@ -54,10 +58,10 @@ class MyApp extends StatelessWidget {
         home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (ctx, snap) =>
-              snap.hasData ? const Homepage() : const SplashScreen(),
+              snap.hasData ? HidenDrawer() : const SplashScreen(),
         ),
         routes: {
-          Homepage.routeName: (ctx) => const Homepage(),
+          Homepage.routeName: (ctx) => Homepage(),
           UserProfile.routeName: (ctx) => const UserProfile(),
           MyBookingsScreen.routeName: (ctx) => const MyBookingsScreen(),
           FavouritesScreen.routeName: (ctx) => const FavouritesScreen(),
@@ -66,6 +70,7 @@ class MyApp extends StatelessWidget {
           MechanicRegisterScreen.routeName: (ctx) =>
               const MechanicRegisterScreen(),
           MechanicDashboard.routeName: (ctx) => const MechanicDashboard(),
+          ManageBookingsScreen.routeName: (ctx) => const ManageBookingsScreen(),
         },
       ),
     );

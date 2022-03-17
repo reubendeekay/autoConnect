@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mechanic/models/mechanic_model.dart';
 
@@ -25,6 +26,15 @@ class AdminUserProvider with ChangeNotifier {
       imageUrls.add(url);
     }).toList());
 
+    List<String> serviceUrls = [];
+    await Future.forEach(mech.services!, <File>(service) async {
+      final servResult = await FirebaseStorage.instance
+          .ref('mechanics/$uid/services')
+          .putFile(service!.imageFile!);
+      String servUrl = await servResult.ref.getDownloadURL();
+      serviceUrls.add(servUrl);
+    });
+
 //UPLOADING mechanic Data TO FIREBASE DATABASE
     await FirebaseFirestore.instance.collection('mechanics').doc(uid).set({
       'name': mech.name,
@@ -38,7 +48,14 @@ class AdminUserProvider with ChangeNotifier {
       'images': imageUrls,
       'services': mech.services!.isEmpty
           ? []
-          : mech.services!.map((service) => service.toJson()).toList(),
+          : List.generate(
+              mech.services!.length,
+              (i) => {
+                    'serviceName': mech.services![i].serviceName,
+                    'price': mech.services![i].price,
+                    'imageUrl': serviceUrls[i],
+                    'id': UniqueKey().toString(),
+                  }),
     });
     await FirebaseFirestore.instance.collection('users').doc(uid).update({
       'isMechanic': true,

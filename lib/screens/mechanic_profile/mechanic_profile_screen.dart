@@ -5,7 +5,8 @@ import 'package:mechanic/screens/home/widgets/request_service_button.dart';
 import 'package:mechanic/screens/mechanic_profile/widgets/mechanic_profile_body.dart';
 
 class MechanicProfileScreen extends StatelessWidget {
-  const MechanicProfileScreen({Key? key,required this.mechanic}) : super(key: key);
+  const MechanicProfileScreen({Key? key, required this.mechanic})
+      : super(key: key);
   final MechanicModel mechanic;
 
   @override
@@ -33,19 +34,26 @@ class MechanicProfileScreen extends StatelessWidget {
                               blurRadius: 5)
                         ])),
                     background: cachedImage(
-                    mechanic.profile!,
+                      mechanic.profile!,
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
                 SliverList(
                     delegate: SliverChildBuilderDelegate(
-                        (context, i) =>  MechanicProfileBody(mechanic:mechanic ,),
+                        (context, i) => MechanicProfileBody(
+                              mechanic: mechanic,
+                            ),
                         childCount: 1))
               ],
             ),
-            const Positioned(
-                bottom: 10, left: 15, right: 15, child: RequestServiceButton()),
+            Positioned(
+                bottom: 10,
+                left: 15,
+                right: 15,
+                child: RequestServiceButton(
+                  mechanic: mechanic,
+                )),
           ],
         ),
       ),

@@ -6,9 +6,12 @@ import 'package:get/route_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/helpers/my_loader.dart';
 import 'package:mechanic/models/mechanic_model.dart';
+import 'package:mechanic/models/service_model.dart';
 import 'package:mechanic/providers/admin_user_provider.dart';
 import 'package:mechanic/providers/location_provider.dart';
+import 'package:mechanic/screens/mechanic/add_service.dart';
 import 'package:mechanic/screens/mechanic/mechanic_register/add_on_map.dart';
 import 'package:mechanic/screens/mechanic/mechanic_register/widgets/time_picker.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
@@ -34,6 +37,8 @@ class _MechanicRegisterScreenState extends State<MechanicRegisterScreen> {
   PickedTime? openingTime;
   PickedTime? closingTime;
   LatLng? location;
+  List<ServiceModel> services = [];
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -197,6 +202,10 @@ class _MechanicRegisterScreenState extends State<MechanicRegisterScreen> {
             const SizedBox(
               height: 10,
             ),
+            const Text('Operational Location'),
+            const SizedBox(
+              height: 5,
+            ),
             GestureDetector(
                 onTap: () {
                   Get.to(() => AddOnMap());
@@ -229,6 +238,10 @@ class _MechanicRegisterScreenState extends State<MechanicRegisterScreen> {
                 )),
             const SizedBox(
               height: 10,
+            ),
+            const Text('Your Photos'),
+            const SizedBox(
+              height: 5,
             ),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -285,35 +298,68 @@ class _MechanicRegisterScreenState extends State<MechanicRegisterScreen> {
             SizedBox(
               height: 45,
               child: RaisedButton(
-                onPressed: () {
-                  Provider.of<AdminUserProvider>(context, listen: false)
-                      .registerMechanic(MechanicModel(
-                    address: address,
-                    openingTime: (openingTime!.h < 10
-                            ? '0' '${openingTime!.h}'
-                            : '${openingTime!.h}') +
-                        ' : ${(openingTime!.m < 10 ? '0' '${openingTime!.m}' : '${openingTime!.m}')}',
-                    description: description,
-                    fileImages: imageFiles,
-                    location: GeoPoint(
-                      loc.latitude!,
-                      loc.longitude!,
-                    ),
-                    phone: phone!,
-                    closingTime: (closingTime!.h < 10
-                            ? '0' '${closingTime!.h}'
-                            : '${closingTime!.h}') +
-                        ' : ${(closingTime!.m < 10 ? '0' '${closingTime!.m}' : '${closingTime!.m}')}',
-                    profileFile: coverFile,
-                    name: name!,
-                    services: [],
-                  ));
-                },
+                  color: kPrimaryColor,
+                  onPressed: () {
+                    Get.to(() => AddServices(
+                          onCompleted: (val) {
+                            setState(() {
+                              services = val;
+                            });
+                          },
+                        ));
+                  },
+                  child: const Text(
+                    'Add Your Services',
+                    style: TextStyle(color: Colors.white),
+                  )),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              height: 45,
+              child: RaisedButton(
+                onPressed: services.isEmpty
+                    ? null
+                    : () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await Provider.of<AdminUserProvider>(context,
+                                listen: false)
+                            .registerMechanic(MechanicModel(
+                          address: address,
+                          openingTime: (openingTime!.h < 10
+                                  ? '0' '${openingTime!.h}'
+                                  : '${openingTime!.h}') +
+                              ' : ${(openingTime!.m < 10 ? '0' '${openingTime!.m}' : '${openingTime!.m}')}',
+                          description: description,
+                          fileImages: imageFiles,
+                          location: GeoPoint(
+                            loc.latitude!,
+                            loc.longitude!,
+                          ),
+                          phone: phone!,
+                          closingTime: (closingTime!.h < 10
+                                  ? '0' '${closingTime!.h}'
+                                  : '${closingTime!.h}') +
+                              ' : ${(closingTime!.m < 10 ? '0' '${closingTime!.m}' : '${closingTime!.m}')}',
+                          profileFile: coverFile,
+                          name: name!,
+                          services: [],
+                        ));
+                        setState(() {
+                          isLoading = false;
+                        });
+                        Navigator.of(context).pop();
+                      },
                 color: kPrimaryColor,
-                child: const Text(
-                  'Register',
-                  style: TextStyle(color: Colors.white),
-                ),
+                child: isLoading
+                    ? const MyLoader()
+                    : const Text(
+                        'Register',
+                        style: TextStyle(color: Colors.white),
+                      ),
               ),
             ),
             const SizedBox(

@@ -2,10 +2,15 @@ import 'dart:io';
 
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/models/mechanic_model.dart';
+import 'package:mechanic/screens/mechanic/service_tile.dart';
+import 'package:mechanic/screens/payment/widgets/payment_screen.dart';
 
 class ServiceDetailsScreen extends StatefulWidget {
-  const ServiceDetailsScreen({Key? key}) : super(key: key);
+  const ServiceDetailsScreen({Key? key, required this.mech}) : super(key: key);
+  final MechanicModel mech;
 
   @override
   State<ServiceDetailsScreen> createState() => _ServiceDetailsScreenState();
@@ -116,7 +121,19 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                                 ))
                       ],
                     ),
-                  )
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  const Text('Select services'),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  ...List.generate(
+                      widget.mech.services!.length,
+                      (index) => ServiceTile(
+                            widget.mech.services![index],
+                          ))
                 ],
               ),
             ),
@@ -124,7 +141,9 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
               height: 45,
               width: double.infinity,
               child: RaisedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() => PaymentScreen());
+                },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)),
                 color: kPrimaryColor,

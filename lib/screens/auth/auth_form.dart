@@ -5,6 +5,7 @@ import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/helpers/loading_screen.dart';
 import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/screens/auth/input_widget.dart';
+import 'package:mechanic/screens/drawer/hidden_drawer.dart';
 import 'package:mechanic/screens/home/homepage.dart';
 import 'package:provider/provider.dart';
 
@@ -89,7 +90,7 @@ class _LoginFormState extends State<LoginForm> {
                   email: email!.trim(),
                   password: password!.trim(),
                 );
-                Get.off(() => const Homepage());
+                Get.off(() => HidenDrawer());
               } catch (e) {
                 print(e);
               }
@@ -101,7 +102,7 @@ class _LoginFormState extends State<LoginForm> {
                   fullName: fullName,
                   phoneNumber: phoneNumber!.trim(),
                 );
-                Get.off(() => const Homepage());
+                Get.off(() => HidenDrawer());
               } catch (e) {
                 print(e);
               }

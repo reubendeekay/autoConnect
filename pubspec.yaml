@@ -28,6 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   android_intent_plus: ^3.0.2
+  animate_do: ^2.1.0
   cached_network_image: ^3.2.0
   carousel_slider: ^4.0.0
   cloud_firestore: ^3.1.4
@@ -39,10 +40,10 @@ dependencies:
   firebase_dynamic_links: ^4.0.3
   firebase_messaging: ^11.2.4
   firebase_storage: ^10.2.3
+  fl_chart: ^0.46.0
   flutter:
     sdk: flutter
   flutter_rating_bar: ^4.0.0
-
   font_awesome_flutter: ^9.2.0
   get: ^4.3.8
   google_fonts: ^2.1.0

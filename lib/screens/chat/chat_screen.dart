@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/providers/chat_provider.dart';
 
 import 'package:provider/provider.dart';
@@ -14,25 +15,33 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
+        shrinkWrap: true,
         children: [
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Row(
-              children: const [
-                Text(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(Icons.arrow_back)),
+                const Text(
                   'Chat',
                   style: TextStyle(
                     fontSize: 24,
-                    color: Colors.white,
+                    color: kPrimaryColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                Spacer(),
-                Icon(CupertinoIcons.search, color: Colors.white),
-                SizedBox(
+                const Spacer(),
+                const Icon(
+                  CupertinoIcons.search,
+                ),
+                const SizedBox(
                   width: 10,
                 ),
-                Icon(Icons.more_vert),
+                const Icon(Icons.more_vert),
               ],
             ),
           ),
@@ -62,41 +71,8 @@ class ChatScreenWidget extends StatelessWidget {
 
     return ListView(
       padding: const EdgeInsets.all(0),
+      shrinkWrap: true,
       children: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 15),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                children: [
-                  const Text('Users',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
-                  Container(
-                    margin: const EdgeInsets.only(top: 5),
-                    height: 3,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Colors.pinkAccent,
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              const Text('Groups',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey)),
-            ],
-          ),
-        ),
         ...List.generate(
             contacts.length,
             (index) => ChatTile(
@@ -113,7 +89,7 @@ class ChatScreenWidget extends StatelessWidget {
                   'You have no unread messages',
                   style: TextStyle(
                       fontSize: 18,
-                      color: Colors.pinkAccent,
+                      color: kPrimaryColor,
                       fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 5),

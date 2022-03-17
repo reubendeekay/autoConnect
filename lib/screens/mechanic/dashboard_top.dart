@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mechanic/screens/chat/chat_screen.dart';
+import 'package:mechanic/screens/mechanic/manage_bookings/manage_bookings_screen.dart';
 
 class DashboardTop extends StatelessWidget {
   const DashboardTop({Key? key}) : super(key: key);
@@ -81,6 +82,7 @@ class DashboardTop extends StatelessWidget {
                   color: Colors.blue,
                   icon: Icons.event_seat_outlined,
                   title: 'Manage\nBookings',
+                  routeName: ManageBookingsScreen.routeName,
                 ),
                 DashboardTopOption(
                   color: Colors.orange,

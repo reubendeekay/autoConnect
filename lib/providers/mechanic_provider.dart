@@ -23,6 +23,7 @@ class MechanicProvider with ChangeNotifier {
               phone: e['phone'],
               name: e['name'],
               id: e.id,
+              services: e['services'],
             ))
         .toList();
 
