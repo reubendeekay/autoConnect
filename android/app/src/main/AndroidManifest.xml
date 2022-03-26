@@ -30,7 +30,7 @@
         android:label="AutoConnect"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher" android:requestLegacyExternalStorage="true">
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCEECT3Lkx_8crredHuI728tLDI5kWesjw"/>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDIL1xyrMndlk2dSSSSikdobR8qDjz0jjQ"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

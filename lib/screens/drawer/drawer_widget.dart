@@ -194,8 +194,9 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
   Widget _buidText(context) {
     var we = MediaQuery.of(context).size.width;
-    var he = MediaQuery.of(context).size.height;
-    final user = Provider.of<AuthProvider>(context, listen: false).user;
+    final user = Provider.of<AuthProvider>(
+      context,
+    ).user;
     return GestureDetector(
       onTap: () {
         Get.to(() => const UserProfile());

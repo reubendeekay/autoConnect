@@ -1,8 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/route_manager.dart';
+import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/providers/auth_provider.dart';
+import 'package:mechanic/providers/mechanic_provider.dart';
 import 'package:mechanic/screens/chat/chat_screen.dart';
+import 'package:mechanic/screens/invoice/invoice_page.dart';
+import 'package:mechanic/screens/mechanic/add_service.dart';
+import 'package:mechanic/screens/mechanic/admin_mechanic_profile.dart';
 import 'package:mechanic/screens/mechanic/manage_bookings/manage_bookings_screen.dart';
+import 'package:provider/provider.dart';
 
 class DashboardTop extends StatelessWidget {
   const DashboardTop({Key? key}) : super(key: key);
@@ -10,10 +19,12 @@ class DashboardTop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final mechanic = Provider.of<AuthProvider>(context).mechanic;
 
     return SafeArea(
       child: SizedBox(
         width: size.width,
+        height: size.height * 0.29 - MediaQuery.of(context).padding.top,
         child: Column(
           children: [
             Container(
@@ -24,7 +35,10 @@ class DashboardTop extends StatelessWidget {
                     width: 5,
                   ),
                   IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_outlined),
+                    icon: const Icon(
+                      Icons.arrow_back_ios_outlined,
+                      color: Colors.white,
+                    ),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -34,15 +48,31 @@ class DashboardTop extends StatelessWidget {
                   ),
                   const Text(
                     'Your Dashboard',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
                   ),
                   const Spacer(),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Navigator.of(context).pushNamed(ChatScreen.routeName);
+                  //   },
+                  //   child: const Icon(
+                  //     FontAwesomeIcons.paperPlane,
+                  //     color: Colors.white,
+                  //   ),
+                  // ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pushNamed(ChatScreen.routeName);
+                      Get.to(() => const AdminMechanicProfile());
                     },
-                    child: const Icon(
-                      FontAwesomeIcons.paperPlane,
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: kPrimaryColor,
+                      backgroundImage:
+                          CachedNetworkImageProvider(mechanic!.profile!),
                     ),
                   ),
                   const SizedBox(
@@ -51,34 +81,18 @@ class DashboardTop extends StatelessWidget {
                 ],
               ),
             ),
-            Center(
-                child: Column(
-              children: const [
-                Text(
-                  'BALANCE',
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  'KSH. 0.0',
-                  style: TextStyle(fontSize: 24),
-                )
-              ],
-            )),
-            const SizedBox(
-              height: 20,
-            ),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 DashboardTopOption(
                   color: Colors.green,
                   icon: Icons.dashboard_customize,
-                  title: 'Manage\nServices',
+                  title: 'Add\nService(s)',
+                  onTap: () => Get.to(() => const AddServices()),
                 ),
-                DashboardTopOption(
+                const DashboardTopOption(
                   color: Colors.blue,
                   icon: Icons.event_seat_outlined,
                   title: 'Manage\nBookings',
@@ -87,15 +101,24 @@ class DashboardTop extends StatelessWidget {
                 DashboardTopOption(
                   color: Colors.orange,
                   icon: Icons.bar_chart,
-                  title: 'Your\nAnalytics',
+                  title: 'Your\nInvoices',
+                  onTap: () {
+                    Get.to(() => const InvoiceScreen());
+                  },
                 ),
-                DashboardTopOption(
-                  color: Colors.red,
-                  icon: Icons.person_search_rounded,
-                  title: 'Mechanic\nProfile',
-                ),
+                // DashboardTopOption(
+                //   color: Colors.red,
+                //   icon: Icons.person_search_rounded,
+                //   onTap: () {
+                //     Get.to(() => const AdminMechanicProfile());
+                //   },
+                //   title: 'Mechanic\nProfile',
+                // ),
               ],
-            )
+            ),
+            const SizedBox(
+              height: 5,
+            ),
           ],
         ),
       ),
@@ -108,14 +131,19 @@ class DashboardTopOption extends StatelessWidget {
   final String? title;
   final IconData? icon;
   final String? routeName;
+  final Function? onTap;
 
   const DashboardTopOption(
-      {Key? key, this.color, this.title, this.icon, this.routeName})
+      {Key? key, this.color, this.title, this.icon, this.routeName, this.onTap})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, routeName!),
+      onTap: onTap != null
+          ? () {
+              onTap!();
+            }
+          : () => Navigator.pushNamed(context, routeName!),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
@@ -137,6 +165,9 @@ class DashboardTopOption extends StatelessWidget {
                 child: Text(
                   title!,
                   textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
           ],

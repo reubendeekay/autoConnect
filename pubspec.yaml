@@ -56,7 +56,10 @@ dependencies:
   marker_icon: ^0.7.1
   media_picker_widget: ^0.0.7
   mpesa: ^2.0.0
+  open_file: ^3.2.1
   otp_text_field: ^1.1.1
+  path_provider: ^2.0.9
+  pdf: ^3.7.3
   persistent_bottom_nav_bar: ^4.0.2
   progressive_time_picker: ^0.0.4
   provider: ^6.0.1

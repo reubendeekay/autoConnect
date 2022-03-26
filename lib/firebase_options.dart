@@ -17,20 +17,14 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     // ignore: missing_enum_constant_in_switch
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -43,11 +37,31 @@ class DefaultFirebaseOptions {
     );
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAGNQcw5YyJgMp2gsS5JcDjeJs4xdRHAjY',
+    appId: '1:610386003117:web:8b34829ba7fcb32ad07224',
+    messagingSenderId: '610386003117',
+    projectId: 'my-autoconnect',
+    authDomain: 'my-autoconnect.firebaseapp.com',
+    storageBucket: 'my-autoconnect.appspot.com',
+    measurementId: 'G-P6B826T02H',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBT6mESuxfVCpOAQMiLqzbvlBTFWVCD7LY',
-    appId: '1:646803840998:android:7e118dd9e3911fc6358027',
-    messagingSenderId: '646803840998',
-    projectId: 'autoconnect-4259b',
-    storageBucket: 'autoconnect-4259b.appspot.com',
+    apiKey: 'AIzaSyBVfbYOPiY9_CHGJa8egDFAM9MfE8ymIwY',
+    appId: '1:610386003117:android:14f3a5d16c1f6a01d07224',
+    messagingSenderId: '610386003117',
+    projectId: 'my-autoconnect',
+    storageBucket: 'my-autoconnect.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyCrdjIJopUAP_v79BuCBZdsvbXi9Svmyms',
+    appId: '1:610386003117:ios:cb81dda42adea728d07224',
+    messagingSenderId: '610386003117',
+    projectId: 'my-autoconnect',
+    storageBucket: 'my-autoconnect.appspot.com',
+    iosClientId: '610386003117-263fadt4jn5s4t8811oteoin666fm9s5.apps.googleusercontent.com',
+    iosBundleId: 'com.autoconnect.app',
   );
 }

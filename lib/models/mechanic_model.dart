@@ -33,4 +33,36 @@ class MechanicModel {
     this.images,
     this.services,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'profile': profile,
+      'phone': phone,
+      'description': description,
+      'openingTime': openingTime,
+      'closingTime': closingTime,
+      'address': address,
+      'location': location,
+      'id': id,
+      'images': images,
+      'services': services,
+    };
+  }
+
+  factory MechanicModel.fromJson(Map<String, dynamic> json) {
+    return MechanicModel(
+      address: json['address'],
+      name: json['name'],
+      phone: json['phone'],
+      description: json['description'],
+      profile: json['profile'],
+      openingTime: json['openingTime'],
+      location: json['location'],
+      id: json['id'],
+      closingTime: json['closingTime'],
+      services: json['services'],
+      images: json['images'],
+    );
+  }
 }

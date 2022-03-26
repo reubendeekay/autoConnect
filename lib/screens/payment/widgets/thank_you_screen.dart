@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/screens/drawer/hidden_drawer.dart';
 import 'package:mechanic/screens/home/homepage.dart';
 
 class ThankYouPage extends StatefulWidget {
@@ -24,7 +25,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 6), () {
-      Get.offAll(() => Homepage());
+      Get.offAll(() => HidenDrawer());
     });
   }
 

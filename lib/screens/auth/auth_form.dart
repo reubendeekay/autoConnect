@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
 import 'package:mechanic/helpers/constants.dart';
-import 'package:mechanic/helpers/loading_screen.dart';
+import 'package:mechanic/helpers/my_loader.dart';
 import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/screens/auth/input_widget.dart';
 import 'package:mechanic/screens/drawer/hidden_drawer.dart';
-import 'package:mechanic/screens/home/homepage.dart';
 import 'package:provider/provider.dart';
 
 class LoginForm extends StatefulWidget {
@@ -18,6 +17,7 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   bool isLogin = true;
+  bool isLoading = false;
 
   String? email;
   String? password;
@@ -80,35 +80,62 @@ class _LoginFormState extends State<LoginForm> {
         const SizedBox(
           height: 25.0,
         ),
-        PrimaryButton(
-          text: isLogin ? "Login" : 'Register',
-          onPressed: () async {
-            final auth = Provider.of<AuthProvider>(context, listen: false);
-            if (isLogin) {
-              try {
-                await auth.login(
-                  email: email!.trim(),
-                  password: password!.trim(),
-                );
-                Get.off(() => HidenDrawer());
-              } catch (e) {
-                print(e);
-              }
-            } else {
-              try {
-                await auth.signUp(
-                  email: email!.trim(),
-                  password: password!.trim(),
-                  fullName: fullName,
-                  phoneNumber: phoneNumber!.trim(),
-                );
-                Get.off(() => HidenDrawer());
-              } catch (e) {
-                print(e);
-              }
-            }
-          },
-        ),
+        isLoading
+            ? Container(
+                width: double.infinity,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: kPrimaryColor,
+                  borderRadius: BorderRadius.circular(32.0),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromRGBO(169, 176, 185, 0.42),
+                      spreadRadius: 0,
+                      blurRadius: 8,
+                      offset: Offset(0, 2), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: const MyLoader(),
+              )
+            : PrimaryButton(
+                text: isLogin ? "Login" : 'Register',
+                onPressed: () async {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  final auth =
+                      Provider.of<AuthProvider>(context, listen: false);
+                  if (isLogin) {
+                    try {
+                      await auth.login(
+                        email: email!.trim(),
+                        password: password!.trim(),
+                      );
+                      Get.off(() => HidenDrawer());
+                    } catch (e) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                    }
+                  } else {
+                    try {
+                      await auth.signUp(
+                        email: email!.trim(),
+                        password: password!.trim(),
+                        fullName: fullName,
+                        phoneNumber: phoneNumber!.trim(),
+                      );
+                      Get.off(() => HidenDrawer());
+                    } catch (e) {
+                      print(e);
+                      setState(() {
+                        isLoading = false;
+                      });
+                    }
+                  }
+                },
+              ),
         const SizedBox(
           height: 20.0,
         ),

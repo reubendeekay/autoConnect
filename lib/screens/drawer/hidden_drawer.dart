@@ -57,16 +57,19 @@ class _HidenDrawerState extends State<HidenDrawer> {
 
   Widget buildpage() {
     return GestureDetector(
-      onHorizontalDragStart: (details) => isDragging = true,
-      onHorizontalDragUpdate: (details) {
-        if (!isDragging) return;
-        const delta = 1;
-        if (details.delta.dx > delta) {
-          // onpenDrawer();
-        } else if (details.delta.dx < -delta) {
-          closeDrawer();
-        }
-      },
+      onHorizontalDragStart:
+          isDrawingOpen ? (details) => isDragging = true : null,
+      onHorizontalDragUpdate: isDrawingOpen
+          ? (details) {
+              if (!isDragging) return;
+              const delta = 1;
+              if (details.delta.dx > delta) {
+                // onpenDrawer();
+              } else if (details.delta.dx < -delta) {
+                closeDrawer();
+              }
+            }
+          : null,
       onTap: closeDrawer,
       child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),

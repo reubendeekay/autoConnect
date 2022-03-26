@@ -50,6 +50,16 @@ class _UserProfileState extends State<UserProfile> {
         ),
         body: SingleChildScrollView(
           child: Column(children: [
+            const Text(
+              'Edit Profile',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: kPrimaryColor),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [

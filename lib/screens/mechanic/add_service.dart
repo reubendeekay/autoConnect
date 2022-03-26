@@ -32,12 +32,13 @@ class _AddServicesState extends State<AddServices> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Services'.toUpperCase(),
-          style: const TextStyle(fontWeight: FontWeight.bold),
+        title: const Text(
+          'Add Service(s)',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        elevation: 0,
         backgroundColor: kPrimaryColor,
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
       ),
       body: Form(
         key: _formKey,

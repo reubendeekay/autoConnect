@@ -11,7 +11,11 @@ class LoadingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body:
-          Center(child: Lottie.asset('assets/map.json', fit: BoxFit.fitHeight)),
+          SizedBox(
+            
+            height: double.infinity,
+            width: double.infinity,
+            child: Lottie.asset('assets/map.json', fit: BoxFit.fitHeight)),
     );
   }
 }

@@ -13,7 +13,7 @@ class MyBookingsScreen extends StatelessWidget {
             'My Bookings',
             style: TextStyle(color: Colors.black),
           ),
-          elevation: 0.5,
+          elevation: 0.1,
           backgroundColor: Colors.grey[50],
           iconTheme: IconTheme.of(context).copyWith(color: Colors.black),
         ),

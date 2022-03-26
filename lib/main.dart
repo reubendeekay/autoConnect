@@ -18,6 +18,7 @@ import 'package:mechanic/screens/home/homepage.dart';
 import 'package:mechanic/screens/mechanic/manage_bookings/manage_bookings_screen.dart';
 import 'package:mechanic/screens/mechanic/mechanic_dashboard.dart';
 import 'package:mechanic/screens/mechanic/mechanic_register_screen.dart';
+import 'package:mechanic/screens/mechanic_profile/mechanic_profile_screen.dart';
 import 'package:mechanic/screens/my_boookings/my_bookings.dart';
 import 'package:mechanic/screens/notifications/notifications_screen.dart';
 import 'package:mechanic/screens/user/user_profile.dart';
@@ -71,6 +72,8 @@ class MyApp extends StatelessWidget {
               const MechanicRegisterScreen(),
           MechanicDashboard.routeName: (ctx) => const MechanicDashboard(),
           ManageBookingsScreen.routeName: (ctx) => const ManageBookingsScreen(),
+          MechanicProfileScreen.routeName: (ctx) =>
+              const MechanicProfileScreen(),
         },
       ),
     );

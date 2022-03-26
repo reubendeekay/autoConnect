@@ -35,8 +35,8 @@ class _ProgerssAvatarState extends State<ProgerssAvatar>
   @override
   void dispose() {
     // TODO: implement dispose
-    _controller!.reverse();
     super.dispose();
+    _controller!.reverse();
   }
 
   @override

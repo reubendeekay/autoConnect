@@ -13,7 +13,7 @@ class AdminBookingDetails extends StatelessWidget {
         backgroundColor: kPrimaryColor,
         automaticallyImplyLeading: false,
       ),
-      body: ListView(
+      body: Column(
         children: [
           Card(
             child: Padding(
@@ -77,7 +77,38 @@ class AdminBookingDetails extends StatelessWidget {
                     _detailsTile('Problem', 'Tire Change'),
                   ]),
             ),
-          )
+          ),
+          const Spacer(),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            const SizedBox(width: 20),
+            Expanded(
+              child: SizedBox(
+                height: 45,
+                child: RaisedButton(
+                  onPressed: () {},
+                  color: Colors.green,
+                  textColor: Colors.white,
+                  child: const Text('Confirm Booking'),
+                ),
+              ),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: SizedBox(
+                height: 45,
+                child: RaisedButton(
+                  onPressed: () {},
+                  color: kPrimaryColor,
+                  textColor: Colors.white,
+                  child: const Text('Update Invoice'),
+                ),
+              ),
+            ),
+            const SizedBox(width: 20),
+          ]),
+          SizedBox(
+            height: 10,
+          ),
         ],
       ),
     );

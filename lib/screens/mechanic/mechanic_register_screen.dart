@@ -213,10 +213,18 @@ class _MechanicRegisterScreenState extends State<MechanicRegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Select exact location on map'),
-                    const SizedBox(
-                      height: 5,
-                    ),
+                    if (loc.latitude == null)
+                      SizedBox(
+                        height: 48,
+                        width: double.infinity,
+                        child: OutlineButton(
+                            onPressed: () => Get.to(() => AddOnMap()),
+                            child: const Text('Select exact location on map')),
+                      ),
+                    if (loc.latitude == null)
+                      const SizedBox(
+                        height: 5,
+                      ),
                     Row(
                       children: [
                         const Icon(
@@ -307,6 +315,7 @@ class _MechanicRegisterScreenState extends State<MechanicRegisterScreen> {
                             });
                           },
                         ));
+                    print(services.length);
                   },
                   child: const Text(
                     'Add Your Services',
