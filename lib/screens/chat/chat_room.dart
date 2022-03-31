@@ -6,6 +6,7 @@ import 'package:mechanic/models/message_model.dart';
 import 'package:mechanic/models/user_model.dart';
 import 'package:mechanic/screens/chat/add_message.dart';
 import 'package:mechanic/screens/chat/widgets/chat_bubble.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatRoom extends StatelessWidget {
   static const routeName = '/chat-room';
@@ -87,21 +88,13 @@ class ChatRoom extends StatelessWidget {
             splashRadius: 20,
             constraints: const BoxConstraints(maxHeight: 10, minHeight: 10),
             icon: const Icon(
-              Icons.videocam_rounded,
-              size: 20,
-            ),
-            onPressed: () {},
-          ),
-          IconButton(
-            splashRadius: 20,
-            constraints: const BoxConstraints(maxHeight: 10, minHeight: 10),
-            icon: const Icon(
               Icons.call,
               size: 20,
             ),
-            onPressed: () {},
+            onPressed: () {
+              launch('tel:${user.phoneNumber}');
+            },
           ),
-          moreVert()
         ],
       ),
       body: SizedBox(

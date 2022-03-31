@@ -274,7 +274,7 @@ class ChatProvider with ChangeNotifier {
     final results = await FirebaseFirestore.instance.collection('users').get();
     results.docs
         .where((element) =>
-            element['username']
+            element['fullName']
                 .toLowerCase()
                 .contains(searchTerm.toLowerCase()) ||
             element['phoneNumber']

@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/providers/auth_provider.dart';
+import 'package:mechanic/providers/invoice_provider.dart';
 import 'package:mechanic/providers/mechanic_provider.dart';
 import 'package:mechanic/screens/chat/chat_screen.dart';
 import 'package:mechanic/screens/invoice/invoice_page.dart';
@@ -90,7 +91,9 @@ class DashboardTop extends StatelessWidget {
                   color: Colors.green,
                   icon: Icons.dashboard_customize,
                   title: 'Add\nService(s)',
-                  onTap: () => Get.to(() => const AddServices()),
+                  onTap: () => Get.to(() => const AddServices(
+                        isDashboard: true,
+                      )),
                 ),
                 const DashboardTopOption(
                   color: Colors.blue,
@@ -102,8 +105,10 @@ class DashboardTop extends StatelessWidget {
                   color: Colors.orange,
                   icon: Icons.bar_chart,
                   title: 'Your\nInvoices',
-                  onTap: () {
-                    Get.to(() => const InvoiceScreen());
+                  onTap: () async {
+                    final pdfFile = await PdfInvoiceApi.generate(invoice);
+
+                    PdfApi.openFile(pdfFile);
                   },
                 ),
                 // DashboardTopOption(

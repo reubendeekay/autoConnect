@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/models/user_model.dart';
 import 'package:mechanic/providers/chat_provider.dart';
 import 'package:mechanic/screens/chat/chat_room.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ChatTile extends StatelessWidget {
   final String roomId;
@@ -14,11 +17,28 @@ class ChatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
+      onTap: () async {
+        final users =
+            Provider.of<ChatProvider>(context, listen: false).contactedUsers;
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(chatModel!.user!.userId!)
+            .get()
+            .then((value) {
           Navigator.of(context).pushNamed(ChatRoom.routeName, arguments: {
-        'chatRoomId': roomId,
-        'user': chatModel!.user,
-      }),
+            'user': UserModel(
+              userId: value['userId'],
+              fullName: value['fullName'],
+              imageUrl: value['profilePic'],
+              isMechanic: value['isMechanic'],
+              lastSeen: value['lastSeen'],
+              isOnline: value['isOnline'],
+            ),
+            'chatRoomId': chatModel!.chatRoomId!,
+          });
+        });
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         child: Column(
@@ -53,11 +73,11 @@ class ChatTile extends StatelessWidget {
                             size: 16,
                           ),
                         const Spacer(),
-                        Text(
-                          DateFormat('HH:mm').format(chatModel!.time!.toDate()),
-                          style:
-                              const TextStyle(fontSize: 13, color: Colors.grey),
-                        )
+                        // Text(
+                        //   DateFormat('HH:mm').format(chatModel!.time!.toDate()),
+                        //   style:
+                        //       const TextStyle(fontSize: 13, color: Colors.grey),
+                        // )
                       ],
                     ),
                     Text(

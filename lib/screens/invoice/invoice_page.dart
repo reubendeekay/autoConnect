@@ -39,13 +39,13 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
 
                     final invoice = Invoice(
                       supplier: const Supplier(
-                        name: 'Sarah Field',
-                        address: 'Sarah Street 9, Beijing, China',
-                        paymentInfo: 'https://paypal.me/sarahfieldzz',
+                        name: 'Best Mechanic',
+                        address: 'CBD, Nairobi, Kenya',
+                        paymentInfo: 'https://paypal.me/bestmechanic',
                       ),
                       customer: const Customer(
-                        name: 'Apple Inc.',
-                        address: 'Apple Street, Cupertino, CA 95014',
+                        name: 'Reuben Jefwa.',
+                        address: 'Kilimani, Nairobi, Kenya',
                       ),
                       info: InvoiceInfo(
                         date: date,
@@ -55,53 +55,39 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                       ),
                       items: [
                         InvoiceItem(
-                          description: 'Coffee',
+                          description: 'Car Wash',
                           date: DateTime.now(),
-                          quantity: 3,
+                          quantity: 1,
                           vat: 0.19,
                           unitPrice: 5.99,
                         ),
                         InvoiceItem(
-                          description: 'Water',
+                          description: 'Tire Change',
                           date: DateTime.now(),
-                          quantity: 8,
+                          quantity: 1,
                           vat: 0.19,
-                          unitPrice: 0.99,
+                          unitPrice: 40.99,
                         ),
                         InvoiceItem(
-                          description: 'Orange',
+                          description: 'General service',
                           date: DateTime.now(),
-                          quantity: 3,
+                          quantity: 1,
                           vat: 0.19,
-                          unitPrice: 2.99,
+                          unitPrice: 100.99,
                         ),
                         InvoiceItem(
-                          description: 'Apple',
+                          description: 'Consultation',
                           date: DateTime.now(),
-                          quantity: 8,
+                          quantity: 1,
                           vat: 0.19,
                           unitPrice: 3.99,
                         ),
                         InvoiceItem(
-                          description: 'Mango',
+                          description: 'Wheel alignment',
                           date: DateTime.now(),
                           quantity: 1,
                           vat: 0.19,
-                          unitPrice: 1.59,
-                        ),
-                        InvoiceItem(
-                          description: 'Blue Berries',
-                          date: DateTime.now(),
-                          quantity: 5,
-                          vat: 0.19,
-                          unitPrice: 0.99,
-                        ),
-                        InvoiceItem(
-                          description: 'Lemon',
-                          date: DateTime.now(),
-                          quantity: 4,
-                          vat: 0.19,
-                          unitPrice: 1.29,
+                          unitPrice: 11.59,
                         ),
                       ],
                     );
@@ -117,3 +103,61 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
         ),
       );
 }
+
+final date = DateTime.now();
+final dueDate = date.add(const Duration(days: 7));
+
+final invoice = Invoice(
+  supplier: const Supplier(
+    name: 'Best Mechanic',
+    address: 'CBD, Nairobi, Kenya',
+    paymentInfo: 'https://paypal.me/bestmechanic',
+  ),
+  customer: const Customer(
+    name: 'Reuben Jefwa.',
+    address: 'Kilimani, Nairobi, Kenya',
+  ),
+  info: InvoiceInfo(
+    date: date,
+    dueDate: dueDate,
+    description: 'My description...',
+    number: '${DateTime.now().year}-9999',
+  ),
+  items: [
+    InvoiceItem(
+      description: 'Car Wash',
+      date: DateTime.now(),
+      quantity: 1,
+      vat: 0.19,
+      unitPrice: 5.99,
+    ),
+    InvoiceItem(
+      description: 'Tire Change',
+      date: DateTime.now(),
+      quantity: 1,
+      vat: 0.19,
+      unitPrice: 40.99,
+    ),
+    InvoiceItem(
+      description: 'General service',
+      date: DateTime.now(),
+      quantity: 1,
+      vat: 0.19,
+      unitPrice: 100.99,
+    ),
+    InvoiceItem(
+      description: 'Consultation',
+      date: DateTime.now(),
+      quantity: 1,
+      vat: 0.19,
+      unitPrice: 3.99,
+    ),
+    InvoiceItem(
+      description: 'Wheel alignment',
+      date: DateTime.now(),
+      quantity: 1,
+      vat: 0.19,
+      unitPrice: 11.59,
+    ),
+  ],
+);

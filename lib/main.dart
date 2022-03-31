@@ -12,6 +12,7 @@ import 'package:mechanic/providers/chat_provider.dart';
 import 'package:mechanic/providers/location_provider.dart';
 import 'package:mechanic/providers/mechanic_provider.dart';
 import 'package:mechanic/providers/payment_provider.dart';
+import 'package:mechanic/screens/chat/chat_room.dart';
 import 'package:mechanic/screens/chat/chat_screen.dart';
 import 'package:mechanic/screens/drawer/hidden_drawer.dart';
 import 'package:mechanic/screens/favourites/favourites_screen.dart';
@@ -79,6 +80,7 @@ class MyApp extends StatelessWidget {
           ManageBookingsScreen.routeName: (ctx) => const ManageBookingsScreen(),
           MechanicProfileScreen.routeName: (ctx) =>
               const MechanicProfileScreen(),
+          ChatRoom.routeName: (ctx) => ChatRoom(),
         },
       ),
     );
