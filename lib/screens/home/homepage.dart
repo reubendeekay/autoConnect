@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mechanic/helpers/loading_screen.dart';
 import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/providers/auth_provider.dart';
+import 'package:mechanic/providers/chat_provider.dart';
 import 'package:mechanic/providers/location_provider.dart';
 import 'package:mechanic/providers/mechanic_provider.dart';
 import 'package:mechanic/screens/home/selected_mechanic.dart';
@@ -80,6 +81,7 @@ class _HomepageState extends State<Homepage> {
     final size = MediaQuery.of(context).size;
     Provider.of<AuthProvider>(context, listen: false)
         .getCurrentUser(FirebaseAuth.instance.currentUser!.uid);
+    Provider.of<ChatProvider>(context, listen: false).getChats();
 
     return Scaffold(
       key: _key,

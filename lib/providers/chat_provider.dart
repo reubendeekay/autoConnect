@@ -296,6 +296,8 @@ class ChatProvider with ChangeNotifier {
     print(users.length);
 
     notifyListeners();
+    _contactedUsers =
+        users.map((e) => ChatTileModel(user: e, chatRoomId: '')).toList();
 
     return users.map((e) => ChatTileModel(user: e, chatRoomId: '')).toList();
   }

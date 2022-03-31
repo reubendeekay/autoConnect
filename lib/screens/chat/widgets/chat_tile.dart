@@ -18,9 +18,21 @@ class ChatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
+        // });
         final users =
             Provider.of<ChatProvider>(context, listen: false).contactedUsers;
-
+        List<String> room = users.map<String>((e) {
+          return e.chatRoomId!.contains(FirebaseAuth.instance.currentUser!.uid +
+                  '_' +
+                  chatModel!.user!.userId!)
+              ? FirebaseAuth.instance.currentUser!.uid +
+                  '_' +
+                  chatModel!.user!.userId!
+              : chatModel!.user!.userId! +
+                  '_' +
+                  FirebaseAuth.instance.currentUser!.uid;
+        }).toList();
+        print(room.length);
         await FirebaseFirestore.instance
             .collection('users')
             .doc(chatModel!.user!.userId!)
@@ -35,7 +47,7 @@ class ChatTile extends StatelessWidget {
               lastSeen: value['lastSeen'],
               isOnline: value['isOnline'],
             ),
-            'chatRoomId': chatModel!.chatRoomId!,
+            'chatRoomId': room.first,
           });
         });
       },

@@ -39,7 +39,7 @@ class _AddMessageState extends State<AddMessage> {
               margin: const EdgeInsets.symmetric(horizontal: 5),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(40),
-                  color: Theme.of(context).shadowColor),
+                  color: Colors.blueGrey),
               child: TextField(
                 controller: messageController,
                 maxLines: null,

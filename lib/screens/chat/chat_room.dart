@@ -57,8 +57,7 @@ class ChatRoom extends StatelessWidget {
                       Text(
                         user.fullName!,
                         overflow: TextOverflow.ellipsis,
-                        style:
-                            TextStyle(color: Theme.of(context).iconTheme.color),
+                        style: const TextStyle(color: Colors.white),
                       ),
                       const SizedBox(
                         width: 5,
@@ -95,8 +94,12 @@ class ChatRoom extends StatelessWidget {
               launch('tel:${user.phoneNumber}');
             },
           ),
+          const SizedBox(
+            width: 15,
+          )
         ],
       ),
+      backgroundColor: Colors.blueGrey[200],
       body: SizedBox(
         width: size.width,
         height: size.height,

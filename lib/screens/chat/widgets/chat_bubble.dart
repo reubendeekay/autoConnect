@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:mechanic/helpers/cached_image.dart';
+import 'package:mechanic/helpers/full_screen_image.dart';
 import 'package:mechanic/models/message_model.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
@@ -76,6 +78,9 @@ class ChatBubble extends StatelessWidget {
           ),
         if (message.mediaUrl!.isNotEmpty)
           GestureDetector(
+            onTap: () {
+              Get.to(() => FullscreenImage(image: message.mediaUrl!));
+            },
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
               constraints: BoxConstraints(
