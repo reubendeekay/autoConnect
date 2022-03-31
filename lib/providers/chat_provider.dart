@@ -267,4 +267,36 @@ class ChatProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<List<ChatTileModel>> searchUser(String searchTerm) async {
+    List<UserModel> users = [];
+
+    final results = await FirebaseFirestore.instance.collection('users').get();
+    results.docs
+        .where((element) =>
+            element['username']
+                .toLowerCase()
+                .contains(searchTerm.toLowerCase()) ||
+            element['phoneNumber']
+                .toLowerCase()
+                .contains(searchTerm.toLowerCase()) ||
+            element['fullName']
+                .toLowerCase()
+                .contains(searchTerm.toLowerCase()))
+        .forEach((e) {
+      users.add(UserModel(
+          fullName: e['fullName'],
+          imageUrl: e['profilePic'],
+          userId: e['userId'],
+          phoneNumber: e['phoneNumber'],
+          lastSeen: e['lastSeen'],
+          isOnline: e['isOnline'],
+          isMechanic: e['isMechanic']));
+    });
+    print(users.length);
+
+    notifyListeners();
+
+    return users.map((e) => ChatTileModel(user: e, chatRoomId: '')).toList();
+  }
 }

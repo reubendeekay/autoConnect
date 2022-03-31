@@ -20,7 +20,7 @@ class AdminUserProvider with ChangeNotifier {
 
     await Future.wait(mech.fileImages!.map((file) async {
       final result =
-          await FirebaseStorage.instance.ref('mechanics/$uid').putFile(file);
+          await FirebaseStorage.instance.ref('mechanics/$uid/').putFile(file);
       String url = await result.ref.getDownloadURL();
       imageUrls.add(url);
     }).toList());
@@ -28,7 +28,7 @@ class AdminUserProvider with ChangeNotifier {
     List<String> serviceUrls = [];
     await Future.forEach(mech.services!, <File>(service) async {
       final servResult = await FirebaseStorage.instance
-          .ref('mechanics/$uid/services')
+          .ref('mechanics/$uid/services/')
           .putFile(service!.imageFile!);
       String servUrl = await servResult.ref.getDownloadURL();
       serviceUrls.add(servUrl);

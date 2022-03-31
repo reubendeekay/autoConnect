@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mechanic/models/mechanic_model.dart';
+import 'package:mechanic/models/service_model.dart';
 import 'package:mechanic/models/user_model.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -164,6 +165,8 @@ class AuthProvider with ChangeNotifier {
       address: results['address'],
       closingTime: results['closingTime'],
       openingTime: results['openingTime'],
+      services:
+          results['services'].map((e) => ServiceModel.fromJson(e)).toList(),
       profile: results['profile'],
       description: results['description'],
       images: results['images'],

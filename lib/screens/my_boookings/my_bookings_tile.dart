@@ -12,68 +12,83 @@ class MyBookingsTile extends StatelessWidget {
       onTap: () {
         Get.to(() => const MyBookingDetails());
       },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 7.5),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AspectRatio(
-              aspectRatio: 2.5,
-              child: cachedImage(
-                'https://www.kenyans.co.ke/files/styles/article_style/public/images/media/Mechanic.jpg?itok=-c2o5ygc',
-                fit: BoxFit.cover,
-              ),
+      child: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 7.5),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
             ),
-            Container(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Best Mechanic',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AspectRatio(
+                  aspectRatio: 2.5,
+                  child: cachedImage(
+                    'https://www.kenyans.co.ke/files/styles/article_style/public/images/media/Mechanic.jpg?itok=-c2o5ygc',
+                    fit: BoxFit.cover,
                   ),
-                  Text(
-                    'Kileleshwa, Kenya',
-                    style: TextStyle(fontSize: 12, color: Colors.grey[400]),
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    children: const [
-                      Text(
-                        'Vehicle: ',
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Best Mechanic',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
-                        'BMW X7',
-                        style: TextStyle(),
+                        'Kileleshwa, Kenya',
+                        style: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: const [
+                          Text(
+                            'Vehicle: ',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            'BMW X7',
+                            style: TextStyle(),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: const [
+                          Text(
+                            'Date & Time: ',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            '10:00 AM, 20 Jan 2022',
+                            style: TextStyle(),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  Row(
-                    children: const [
-                      Text(
-                        'Date & Time: ',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      Text(
-                        '10:00 AM, 20 Jan 2022',
-                        style: TextStyle(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Positioned(
+              right: 5,
+              top: 10,
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                color: Colors.red,
+                child: const Text(
+                  'Pending',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ))
+        ],
       ),
     );
   }

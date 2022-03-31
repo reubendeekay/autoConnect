@@ -19,8 +19,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Timer(const Duration(seconds: 5), () {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (_) => const SplashVideoScreen()));
+      mounted
+          ? Navigator.push(context,
+              MaterialPageRoute(builder: (_) => const SplashVideoScreen()))
+          : null;
     });
     super.initState();
   }
@@ -65,7 +67,7 @@ class _SplashVideoScreenState extends State<SplashVideoScreen> {
     _controller.play();
 
     Future.delayed(const Duration(seconds: 5), () {
-      Get.off(() =>  AuthScreen());
+      Get.off(() => AuthScreen());
     });
   }
 

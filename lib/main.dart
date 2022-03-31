@@ -5,6 +5,7 @@ import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mechanic/firebase_options.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/helpers/global_error_screen.dart';
 import 'package:mechanic/providers/admin_user_provider.dart';
 import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/providers/chat_provider.dart';
@@ -27,6 +28,10 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return const Material(child: GlobalErrorScreen());
+  };
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

@@ -1,16 +1,21 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/helpers/service_tile_shimmer.dart';
+import 'package:mechanic/providers/mechanic_provider.dart';
 import 'package:mechanic/screens/mechanic/service_tile.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
 
 import 'package:mechanic/models/service_model.dart';
+import 'package:provider/provider.dart';
 
 class AddServices extends StatefulWidget {
   final Function(List<ServiceModel> services)? onCompleted;
-  const AddServices({Key? key, this.onCompleted}) : super(key: key);
+  const AddServices({Key? key, this.onCompleted, this.isDashboard = false})
+      : super(key: key);
+  final bool isDashboard;
 
   @override
   _AddServicesState createState() => _AddServicesState();
@@ -231,16 +236,23 @@ class _AddServicesState extends State<AddServices> {
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
               height: 45,
               child: RaisedButton(
-                onPressed: () {
-                  widget.onCompleted!(services);
+                onPressed: () async {
+                  final uid = FirebaseAuth.instance.currentUser!.uid;
+                  if (widget.isDashboard) {
+                    await Provider.of<MechanicProvider>(context, listen: false)
+                        .addService(services, uid);
+                    return;
+                  } else {
+                    widget.onCompleted!(services);
+                  }
                   Navigator.of(context).pop();
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),
                 color: kPrimaryColor,
-                child: const Text(
-                  'Complete',
-                  style: TextStyle(color: Colors.white),
+                child: Text(
+                  widget.isDashboard ? 'Save' : 'Complete',
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             )

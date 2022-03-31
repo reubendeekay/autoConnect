@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,8 +11,10 @@ import 'package:mechanic/helpers/my_loader.dart';
 import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/models/service_model.dart';
 import 'package:mechanic/providers/admin_user_provider.dart';
+import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/providers/location_provider.dart';
 import 'package:mechanic/screens/mechanic/add_service.dart';
+import 'package:mechanic/screens/mechanic/mechanic_dashboard.dart';
 import 'package:mechanic/screens/mechanic/mechanic_register/add_on_map.dart';
 import 'package:mechanic/screens/mechanic/mechanic_register/widgets/time_picker.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
@@ -328,39 +331,55 @@ class _MechanicRegisterScreenState extends State<MechanicRegisterScreen> {
             SizedBox(
               height: 45,
               child: RaisedButton(
-                onPressed: services.isEmpty
+                onPressed: services.isEmpty ||
+                        openingTime == null ||
+                        closingTime == null ||
+                        address == null ||
+                        loc.latitude == null ||
+                        loc.longitude == null
                     ? null
                     : () async {
                         setState(() {
                           isLoading = true;
                         });
-                        await Provider.of<AdminUserProvider>(context,
-                                listen: false)
-                            .registerMechanic(MechanicModel(
-                          address: address,
-                          openingTime: (openingTime!.h < 10
-                                  ? '0' '${openingTime!.h}'
-                                  : '${openingTime!.h}') +
-                              ' : ${(openingTime!.m < 10 ? '0' '${openingTime!.m}' : '${openingTime!.m}')}',
-                          description: description,
-                          fileImages: imageFiles,
-                          location: GeoPoint(
-                            loc.latitude!,
-                            loc.longitude!,
-                          ),
-                          phone: phone!,
-                          closingTime: (closingTime!.h < 10
-                                  ? '0' '${closingTime!.h}'
-                                  : '${closingTime!.h}') +
-                              ' : ${(closingTime!.m < 10 ? '0' '${closingTime!.m}' : '${closingTime!.m}')}',
-                          profileFile: coverFile,
-                          name: name!,
-                          services: [],
-                        ));
-                        setState(() {
-                          isLoading = false;
-                        });
-                        Navigator.of(context).pop();
+
+                        try {
+                          await Provider.of<AdminUserProvider>(context,
+                                  listen: false)
+                              .registerMechanic(MechanicModel(
+                            address: address,
+                            openingTime: (openingTime!.h < 10
+                                    ? '0' '${openingTime!.h}'
+                                    : '${openingTime!.h}') +
+                                ' : ${(openingTime!.m < 10 ? '0' '${openingTime!.m}' : '${openingTime!.m}')}',
+                            description: description,
+                            fileImages: imageFiles,
+                            location: GeoPoint(
+                              loc.latitude!,
+                              loc.longitude!,
+                            ),
+                            phone: phone!,
+                            closingTime: (closingTime!.h < 10
+                                    ? '0' '${closingTime!.h}'
+                                    : '${closingTime!.h}') +
+                                ' : ${(closingTime!.m < 10 ? '0' '${closingTime!.m}' : '${closingTime!.m}')}',
+                            profileFile: coverFile,
+                            name: name!,
+                            services: services,
+                          ));
+                          setState(() {
+                            isLoading = false;
+                          });
+
+                          await Provider.of<AuthProvider>(context)
+                              .getMechanicDetails(
+                                  FirebaseAuth.instance.currentUser!.uid);
+
+                          Get.to(() => const MechanicDashboard());
+                        } catch (e) {
+                          print(e);
+                          Navigator.of(context).pop();
+                        }
                       },
                 color: kPrimaryColor,
                 child: isLoading

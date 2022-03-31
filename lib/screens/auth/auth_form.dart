@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
@@ -6,6 +7,7 @@ import 'package:mechanic/helpers/my_loader.dart';
 import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/screens/auth/input_widget.dart';
 import 'package:mechanic/screens/drawer/hidden_drawer.dart';
+import 'package:mechanic/screens/mechanic/mechanic_dashboard.dart';
 import 'package:provider/provider.dart';
 
 class LoginForm extends StatefulWidget {
@@ -112,7 +114,12 @@ class _LoginFormState extends State<LoginForm> {
                         email: email!.trim(),
                         password: password!.trim(),
                       );
-                      Get.off(() => HidenDrawer());
+
+                      if (kIsWeb) {
+                        Get.off(() => const MechanicDashboard());
+                      } else {
+                        Get.off(() => HidenDrawer());
+                      }
                     } catch (e) {
                       setState(() {
                         isLoading = false;
@@ -126,7 +133,12 @@ class _LoginFormState extends State<LoginForm> {
                         fullName: fullName,
                         phoneNumber: phoneNumber!.trim(),
                       );
-                      Get.off(() => HidenDrawer());
+
+                      if (kIsWeb) {
+                        Get.off(() => const MechanicDashboard());
+                      } else {
+                        Get.off(() => HidenDrawer());
+                      }
                     } catch (e) {
                       print(e);
                       setState(() {

@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/providers/chat_provider.dart';
+import 'package:mechanic/screens/chat/chat_screen_search.dart';
 
 import 'package:provider/provider.dart';
 import 'package:mechanic/screens/chat/widgets/chat_tile.dart';
@@ -18,7 +20,7 @@ class ChatScreen extends StatelessWidget {
         shrinkWrap: true,
         children: [
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            margin: const EdgeInsets.fromLTRB(15, 15, 15, 5),
             child: Row(
               children: [
                 IconButton(
@@ -35,13 +37,15 @@ class ChatScreen extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                const Icon(
-                  CupertinoIcons.search,
+                IconButton(
+                  icon: const Icon(CupertinoIcons.search),
+                  onPressed: () {
+                    Get.to(() => const ChatScreenSearch());
+                  },
                 ),
                 const SizedBox(
                   width: 10,
                 ),
-                const Icon(Icons.more_vert),
               ],
             ),
           ),

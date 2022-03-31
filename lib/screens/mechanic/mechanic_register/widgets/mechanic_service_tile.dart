@@ -1,10 +1,15 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:mechanic/helpers/cached_image.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/models/service_model.dart';
 
 class MechanicServiceTile extends StatelessWidget {
-  const MechanicServiceTile({Key? key}) : super(key: key);
+  const MechanicServiceTile({Key? key, required this.service})
+      : super(key: key);
+
+  final ServiceModel service;
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +22,8 @@ class MechanicServiceTile extends StatelessWidget {
           child: ClipRRect(
             borderRadius:
                 BorderRadius.circular(10), // This clips the child            ),
-            child: Image.asset(
-              'assets/images/mountains.jpg',
+            child: cachedImage(
+              service.imageUrl!,
               fit: BoxFit.cover,
             ),
           ),
@@ -37,13 +42,13 @@ class MechanicServiceTile extends StatelessWidget {
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                SizedBox(
+              children: [
+                const SizedBox(
                   height: 8,
                 ),
                 Text(
-                  'Car Wash',
-                  style: TextStyle(
+                  service.serviceName!,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -56,12 +61,12 @@ class MechanicServiceTile extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 Text(
-                  'KES 1200',
-                  style: TextStyle(
+                  'KES ${service.price}',
+                  style: const TextStyle(
                     color: Colors.white,
                     shadows: [
                       Shadow(
@@ -72,7 +77,7 @@ class MechanicServiceTile extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
               ],

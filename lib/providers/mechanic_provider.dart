@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mechanic/models/mechanic_model.dart';
+import 'package:mechanic/models/service_model.dart';
 
 class MechanicProvider with ChangeNotifier {
   List<MechanicModel>? _mechanics;
@@ -76,5 +79,34 @@ class MechanicProvider with ChangeNotifier {
               id: e.id,
             ))
         .toList();
+  }
+
+  Future<void> addService(
+      List<ServiceModel> services, String mechanicId) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+    List<String> serviceUrls = [];
+    await Future.forEach(services, <File>(service) async {
+      final servResult = await FirebaseStorage.instance
+          .ref('mechanics/$uid/services/')
+          .putFile(service!.imageFile!);
+      String servUrl = await servResult.ref.getDownloadURL();
+      serviceUrls.add(servUrl);
+    });
+    await FirebaseFirestore.instance
+        .collection('mechanics')
+        .doc(mechanicId)
+        .update({
+      'services': FieldValue.arrayUnion(
+        List.generate(
+            services.length,
+            (i) => {
+                  'serviceName': services[i].serviceName,
+                  'price': services[i].price,
+                  'imageUrl': serviceUrls[i],
+                  'id': UniqueKey().toString(),
+                }),
+      )
+    });
   }
 }

@@ -11,10 +11,9 @@ Future<void> mpesaPayment({String? phone, double? amount}) async {
   await mpesa.lipaNaMpesa(
     phoneNumber: phone!,
     amount: amount!,
-
     accountReference: 'The Plug',
     businessShortCode: "174379",
-    callbackUrl: "https://google.com",
+    callbackUrl: "https://google.com/",
   );
   // .catchError((error) {});
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mechanic/models/service_model.dart';
 
 class MechanicModel {
   final String? name;

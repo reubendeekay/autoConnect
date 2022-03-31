@@ -7,10 +7,15 @@ import 'package:mechanic/screens/mechanic/dashboard_top.dart';
 import 'package:mechanic/screens/mechanic/mechanic_register/widgets/mechanic_service_tile.dart';
 import 'package:provider/provider.dart';
 
-class MechanicDashboard extends StatelessWidget {
+class MechanicDashboard extends StatefulWidget {
   const MechanicDashboard({Key? key}) : super(key: key);
   static const routeName = '/mechanic-dashboard';
 
+  @override
+  State<MechanicDashboard> createState() => _MechanicDashboardState();
+}
+
+class _MechanicDashboardState extends State<MechanicDashboard> {
   @override
   Widget build(BuildContext context) {
     final mechanic = Provider.of<AuthProvider>(context).mechanic;
@@ -54,14 +59,15 @@ class MechanicDashboard extends StatelessWidget {
                 shrinkWrap: true,
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 6,
+                itemCount: mechanic.services!.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 1.3,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
-                itemBuilder: (ctx, i) => const MechanicServiceTile(),
+                itemBuilder: (ctx, i) =>
+                    MechanicServiceTile(service: mechanic.services![i]),
               ),
             ],
           ),
