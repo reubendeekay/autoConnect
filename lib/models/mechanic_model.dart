@@ -47,7 +47,7 @@ class MechanicModel {
       'location': location,
       'id': id,
       'images': images,
-      'services': services,
+      'services': services!.map((e) => e.toJson()).toList(),
     };
   }
 

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mechanic/models/service_model.dart';
 
 class PaymentProvider with ChangeNotifier {
   double _price = 0;
@@ -12,6 +13,8 @@ class PaymentProvider with ChangeNotifier {
   String _message = '';
   String get message => _message;
   bool isInit = false;
+  List<ServiceModel> _services = [];
+  List<ServiceModel> get services => _services;
 
   void initiliasePrice(double initPrice) {
     _price = initPrice;
@@ -30,6 +33,16 @@ class PaymentProvider with ChangeNotifier {
         ' applied. Discount KES ' +
         voucher.toStringAsFixed(0);
 
+    notifyListeners();
+  }
+
+  Future<void> addService(ServiceModel service) async {
+    if (_services.contains(service)) {
+      _services.remove(service);
+      notifyListeners();
+      return;
+    }
+    _services.add(service);
     notifyListeners();
   }
 }

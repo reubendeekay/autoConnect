@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mechanic/models/request_model.dart';
 import 'package:mechanic/screens/my_boookings/my_bookings_tile.dart';
 
 class MyBookingsScreen extends StatelessWidget {
@@ -7,6 +10,8 @@ class MyBookingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
     return Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -17,19 +22,26 @@ class MyBookingsScreen extends StatelessWidget {
           backgroundColor: Colors.grey[50],
           iconTheme: IconTheme.of(context).copyWith(color: Colors.black),
         ),
-        body: ListView(
-          children: const [
-            MyBookingsTile(),
-            MyBookingsTile(),
-            MyBookingsTile(),
-            MyBookingsTile(),
-            MyBookingsTile(),
-            MyBookingsTile(),
-            MyBookingsTile(),
-            MyBookingsTile(),
-            MyBookingsTile(),
-            MyBookingsTile(),
-          ],
+        body: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('userData')
+              .doc('bookings')
+              .collection(uid)
+              .snapshots(),
+          builder: (ctx, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            final docs = snapshot.data!.docs;
+            return ListView.builder(
+              itemBuilder: (ctx, index) => MyBookingsTile(
+                  booking: RequestModel.fromJson(
+                      docs[index].data() as Map<String, dynamic>)),
+              itemCount: docs.length,
+            );
+          },
         ));
   }
 }

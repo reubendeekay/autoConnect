@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/models/request_model.dart';
+import 'package:mechanic/providers/mechanic_provider.dart';
 import 'package:mechanic/screens/drawer/hidden_drawer.dart';
 import 'package:mechanic/screens/home/homepage.dart';
+import 'package:provider/provider.dart';
 
 class ThankYouPage extends StatefulWidget {
-  const ThankYouPage({
-    Key? key,
-  }) : super(key: key);
+  const ThankYouPage({Key? key, required this.request}) : super(key: key);
+  final RequestModel request;
 
   @override
   State<ThankYouPage> createState() => _ThankYouPageState();
@@ -24,8 +26,12 @@ class _ThankYouPageState extends State<ThankYouPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 6), () {
-      Get.offAll(() => HidenDrawer());
+    Future.delayed(Duration.zero, () async {
+      await Provider.of<MechanicProvider>(context, listen: false)
+          .requestBooking(widget.request);
+      Future.delayed(Duration(seconds: 5), () {
+        Get.offAll(() => HidenDrawer());
+      });
     });
   }
 

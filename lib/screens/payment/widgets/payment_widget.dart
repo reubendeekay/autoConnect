@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mechanic/helpers/mpesa_helper.dart';
+import 'package:mechanic/helpers/my_loader.dart';
+import 'package:mechanic/models/request_model.dart';
 import 'package:mechanic/screens/payment/widgets/thank_you_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:mechanic/helpers/constants.dart';
@@ -9,8 +12,10 @@ import 'package:mechanic/screens/payment/widgets/card_field_widget.dart';
 import 'package:mechanic/screens/payment/widgets/mpesa_field_widget.dart';
 
 class PaymentWidget extends StatefulWidget {
-  const PaymentWidget({Key? key, required this.index}) : super(key: key);
+  const PaymentWidget({Key? key, required this.index, required this.request})
+      : super(key: key);
   final int index;
+  final RequestModel request;
 
   @override
   _PaymentWidgetState createState() => _PaymentWidgetState();
@@ -19,6 +24,7 @@ class PaymentWidget extends StatefulWidget {
 class _PaymentWidgetState extends State<PaymentWidget> {
   String? phoneNumber;
   bool isValidate = false;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     int currentIndex = widget.index;
@@ -73,31 +79,54 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)),
                 onPressed: () async {
+                  final uid = FirebaseAuth.instance.currentUser!.uid;
                   setState(() {
                     isValidate = true;
+                    isLoading = true;
                   });
-                  // if (currentIndex == 1) {
-                  //   await mpesa.lipaNaMpesa(
-                  //     phoneNumber: phoneNumber.toString(),
-                  //     amount:
-                  //         pricing.price - pricing.voucher - pricing.shipping,
-                  //     accountReference: 'AutoConnect',
-                  //     businessShortCode: "174379",
-                  //     callbackUrl: "https://google.com",
-                  //   );
-                  //   // await mpesaPayment(
-                  //   //   amount:
-                  //   //       pricing.price - pricing.voucher - pricing.shipping,
-                  //   //   phone: phoneNumber.toString(),
-                  //   // );
-                  // }
-                  Get.off(() => const ThankYouPage());
+                  if (currentIndex == 1) {
+                    try {
+                      await mpesa.lipaNaMpesa(
+                        phoneNumber: phoneNumber.toString(),
+                        amount: pricing.price,
+                        accountReference: 'AutoConnect',
+                        businessShortCode: "174379",
+                        callbackUrl:
+                            "https://us-central1-my-autoconnect.cloudfunctions.net/lmno_callback_url/user?uid=$uid/${pricing.price}",
+                      );
+
+                      setState(() {
+                        isLoading = false;
+                      });
+
+                      Get.off(() => ThankYouPage(
+                            request: widget.request,
+                          ));
+                    } catch (e) {
+                      print(e);
+                      setState(() {
+                        isLoading = false;
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(e.toString()),
+                        ),
+                      );
+                    }
+                    // await mpesaPayment(
+                    //   amount:
+                    //       pricing.price - pricing.voucher - pricing.shipping,
+                    //   phone: phoneNumber.toString(),
+                    // );
+                  }
                 },
                 color: kPrimaryColor,
-                child: Text(
-                  'Pay KES ${(pricing.price - pricing.voucher - pricing.shipping).toStringAsFixed(0)}',
-                  style: const TextStyle(color: Colors.white),
-                ),
+                child: isLoading
+                    ? const MyLoader()
+                    : Text(
+                        'Pay KES ${(pricing.price - pricing.voucher - pricing.shipping).toStringAsFixed(0)}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
               ),
             ),
           ),

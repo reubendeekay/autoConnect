@@ -1,12 +1,19 @@
 import 'dart:io';
 
 import 'package:date_picker_timeline/date_picker_widget.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/models/mechanic_model.dart';
+import 'package:mechanic/models/request_model.dart';
+import 'package:mechanic/models/service_model.dart';
+import 'package:mechanic/providers/auth_provider.dart';
+import 'package:mechanic/providers/payment_provider.dart';
 import 'package:mechanic/screens/mechanic/service_tile.dart';
 import 'package:mechanic/screens/payment/widgets/payment_screen.dart';
+import 'package:media_picker_widget/media_picker_widget.dart';
+import 'package:provider/provider.dart';
 
 class ServiceDetailsScreen extends StatefulWidget {
   const ServiceDetailsScreen({Key? key, required this.mech}) : super(key: key);
@@ -19,10 +26,17 @@ class ServiceDetailsScreen extends StatefulWidget {
 class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
   String? vehicleName;
   String? problem;
-  List<File> images = [];
+  List<File> imageFiles = [];
+  List<Media> mediaList = [];
+  ServiceModel? service;
+  DateTime? _selectedDate;
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<AuthProvider>(context).user;
+    final pay = Provider.of<PaymentProvider>(
+      context,
+    );
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -52,9 +66,9 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                       selectedTextColor: Colors.white,
                       onDateChange: (date) {
                         // New date selected
-                        // setState(() {
-                        //   _selectedValue = date;
-                        // });
+                        setState(() {
+                          _selectedDate = date;
+                        });
                       },
                     ),
                   ),
@@ -98,26 +112,31 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(25),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.blueGrey[100]),
-                          child: const Icon(
-                            Icons.camera_alt,
-                            color: Colors.blueGrey,
+                        GestureDetector(
+                          onTap: () {
+                            openImagePicker(context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(25),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.blueGrey[100]),
+                            child: const Icon(
+                              Icons.camera_alt,
+                              color: Colors.blueGrey,
+                            ),
                           ),
                         ),
                         const SizedBox(
                           width: 10,
                         ),
                         ...List.generate(
-                            images.length,
+                            imageFiles.length,
                             (index) => Container(
                                   margin: const EdgeInsets.only(right: 15),
                                   height: 80,
                                   width: 80,
-                                  child: Image.file(images[index]),
+                                  child: Image.file(imageFiles[index]),
                                 ))
                       ],
                     ),
@@ -141,9 +160,35 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
               height: 45,
               width: double.infinity,
               child: RaisedButton(
-                onPressed: () {
-                  Get.to(() => PaymentScreen());
-                },
+                onPressed: pay.services.isEmpty
+                    ? null
+                    : () async {
+                        List<String> imageUrls = [];
+
+                        for (var file in imageFiles) {
+                          FirebaseStorage.instance
+                              .ref(
+                                  'requests/images/${DateTime.now().toIso8601String()}')
+                              .putFile(file)
+                              .then((value) => value.ref.getDownloadURL())
+                              .then((val) => imageUrls.add(val.toString()));
+                        }
+
+                        final request = RequestModel(
+                          date: _selectedDate,
+                          mechanic: widget.mech,
+                          problem: problem,
+                          user: user,
+                          amount: pay.price.toStringAsFixed(2),
+                          services: pay.services,
+                          vehicleModel: vehicleName,
+                          images: imageUrls,
+                        );
+
+                        Get.to(() => PaymentScreen(
+                              request: request,
+                            ));
+                      },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)),
                 color: kPrimaryColor,
@@ -158,5 +203,62 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> openImagePicker(
+    BuildContext context,
+  ) async {
+    // openCamera(onCapture: (image){
+    //   setState(()=> mediaList = [image]);
+    // });
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        ),
+        context: context,
+        builder: (context) {
+          return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => Navigator.of(context).pop(),
+              child: DraggableScrollableSheet(
+                initialChildSize: 0.6,
+                maxChildSize: 0.95,
+                minChildSize: 0.6,
+                builder: (ctx, controller) => AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    color: Colors.white,
+                    child: MediaPicker(
+                      scrollController: controller,
+                      mediaList: mediaList,
+                      onPick: (selectedList) {
+                        setState(() => mediaList = selectedList);
+
+                        imageFiles = mediaList.map((e) => e.file!).toList();
+
+                        mediaList.clear();
+
+                        Navigator.pop(context);
+                      },
+                      onCancel: () => Navigator.pop(context),
+                      mediaCount: MediaCount.multiple,
+                      mediaType: MediaType.image,
+                      decoration: PickerDecoration(
+                        cancelIcon: const Icon(Icons.close),
+                        albumTitleStyle: TextStyle(
+                            color: Theme.of(context).iconTheme.color,
+                            fontWeight: FontWeight.bold),
+                        actionBarPosition: ActionBarPosition.top,
+                        blurStrength: 2,
+                        completeButtonStyle: const ButtonStyle(),
+                        completeTextStyle:
+                            TextStyle(color: Theme.of(context).iconTheme.color),
+                        completeText: 'Select',
+                      ),
+                    )),
+              ));
+        });
   }
 }

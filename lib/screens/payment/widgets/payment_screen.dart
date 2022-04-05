@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mechanic/helpers/cached_image.dart';
+import 'package:mechanic/models/request_model.dart';
 import 'package:mechanic/screens/payment/widgets/payment_widget.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({Key? key}) : super(key: key);
+  const PaymentScreen({Key? key, required this.request}) : super(key: key);
+  final RequestModel request;
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -61,6 +63,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   child: paymentOptions[index])),
           PaymentWidget(
             index: selectedIndex,
+            request: widget.request,
           )
         ],
       ),

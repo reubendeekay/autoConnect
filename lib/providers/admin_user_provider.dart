@@ -51,7 +51,7 @@ class AdminUserProvider with ChangeNotifier {
               mech.services!.length,
               (i) => {
                     'serviceName': mech.services![i].serviceName,
-                    'price': mech.services![i].price,
+                    'price': mech.services![i].amount,
                     'imageUrl': serviceUrls[i],
                     'id': UniqueKey().toString(),
                   }),

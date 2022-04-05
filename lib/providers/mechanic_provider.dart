@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mechanic/models/mechanic_model.dart';
+import 'package:mechanic/models/request_model.dart';
 import 'package:mechanic/models/service_model.dart';
 
 class MechanicProvider with ChangeNotifier {
@@ -26,7 +27,8 @@ class MechanicProvider with ChangeNotifier {
               phone: e['phone'],
               name: e['name'],
               id: e.id,
-              services: e['services'],
+              services:
+                  e['services'].map((k) => ServiceModel.fromJson(k)).toList(),
             ))
         .toList();
 
@@ -108,5 +110,26 @@ class MechanicProvider with ChangeNotifier {
                 }),
       )
     });
+    notifyListeners();
+  }
+
+  Future<void> requestBooking(RequestModel booking) async {
+    print(booking.toJson());
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance
+        .collection('requests')
+        .doc('mechanics')
+        .collection(booking.mechanic!.id!)
+        .doc()
+        .set(booking.toJson());
+
+    await FirebaseFirestore.instance
+        .collection('userData')
+        .doc('bookings')
+        .collection(uid)
+        .doc()
+        .set(booking.toJson());
+
+    notifyListeners();
   }
 }

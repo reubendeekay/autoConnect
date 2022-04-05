@@ -20,14 +20,17 @@ class _ProgerssAvatarState extends State<ProgerssAvatar>
 
   @override
   void initState() {
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    _animation = Tween(begin: 0.0, end: 0.4).animate(_controller!)
-      ..addListener(() {
-        setState(() {});
-      });
+    if (mounted) {
+      _controller = AnimationController(
+          vsync: this, duration: const Duration(seconds: 1));
 
-    _controller!.forward();
+      _animation = Tween(begin: 0.0, end: 0.4).animate(_controller!)
+        ..addListener(() {
+          setState(() {});
+        });
+
+      _controller!.forward();
+    }
 
     super.initState();
   }
@@ -36,7 +39,7 @@ class _ProgerssAvatarState extends State<ProgerssAvatar>
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _controller!.reverse();
+    mounted ? _controller!.reverse() : null;
   }
 
   @override

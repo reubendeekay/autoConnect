@@ -52,9 +52,7 @@ class ChatScreen extends StatelessWidget {
           const Divider(
             thickness: 1,
           ),
-          Expanded(
-            child: ChatScreenWidget(),
-          )
+          ChatScreenWidget(),
         ],
       ),
     );

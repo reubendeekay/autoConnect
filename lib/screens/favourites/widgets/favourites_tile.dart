@@ -8,7 +8,7 @@ class FavouritesTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => const MyBookingDetails());
+        // Get.to(() =>  MyBookingDetails()); w34g+++++++++++++++++
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 6.5),

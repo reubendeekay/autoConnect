@@ -1,0 +1,64 @@
+import 'dart:io';
+
+import 'package:mechanic/models/mechanic_model.dart';
+import 'package:mechanic/models/service_model.dart';
+import 'package:mechanic/models/user_model.dart';
+
+class RequestModel {
+  final String? problem;
+  final DateTime? date;
+  final String? vehicleModel;
+  final List<File> imageFiles = [];
+  List<dynamic>? images = [];
+  List<ServiceModel>? services = [];
+  final MechanicModel? mechanic;
+  final UserModel? user;
+  final String? amount;
+
+  RequestModel(
+      {this.problem,
+      this.date,
+      this.vehicleModel,
+      this.mechanic,
+      this.user,
+      this.services,
+      this.amount,
+      this.images});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'problem': problem,
+      'date': date,
+      'vehicleModel': vehicleModel,
+      'amount': amount,
+      'mechanic': {
+        'id': mechanic?.id,
+        'name': mechanic?.name,
+        'profile': mechanic?.profile,
+        'phone': mechanic?.phone,
+        'address': mechanic?.address,
+        'location': mechanic?.location,
+      },
+      'user': user?.toJson(),
+      'services': services?.map((service) => service.toJson()).toList(),
+      'images': images,
+    };
+  }
+
+  factory RequestModel.fromJson(Map<String, dynamic> json) {
+    return RequestModel(
+      problem: json['problem'],
+      date: json['date'].toDate(),
+      vehicleModel: json['vehicleModel'],
+      amount: json['amount'],
+      mechanic: json['mechanic'] != null
+          ? MechanicModel.fromJson(json['mechanic'])
+          : null,
+      user: json['user'] != null ? UserModel.fromJson(json['user']) : null,
+      services: (json['services'] as List<dynamic>)
+          .map((service) => ServiceModel.fromJson(service))
+          .toList(),
+      images: json['images'],
+    );
+  }
+}

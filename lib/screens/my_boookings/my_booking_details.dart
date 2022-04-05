@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/models/request_model.dart';
 
 class MyBookingDetails extends StatelessWidget {
-  const MyBookingDetails({Key? key}) : super(key: key);
+  const MyBookingDetails({Key? key, required this.request}) : super(key: key);
+  final RequestModel request;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +27,7 @@ class MyBookingDetails extends StatelessWidget {
               children: [
                 mechanicDetails(),
                 vehicleDetails(),
+                services(),
                 dateAndTime(),
               ],
             ),
@@ -42,14 +46,14 @@ class MyBookingDetails extends StatelessWidget {
         child: Column(children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
+            children: [
+              const Text(
                 'Total Amount',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Text(
-                '\$100',
-                style: TextStyle(
+                'KES ' + request.amount!,
+                style: const TextStyle(
                     fontSize: 16,
                     color: kPrimaryColor,
                     fontWeight: FontWeight.bold),
@@ -95,32 +99,26 @@ class MyBookingDetails extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Engine Detailing',
+          ...List.generate(
+            request.services!.length,
+            (i) => Padding(
+              padding: const EdgeInsets.only(bottom: 5),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    request.services![i].serviceName!,
+                  ),
+                  const Spacer(),
+                  Text(
+                    'KES ' + request.services![i].price!,
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                ],
               ),
-              Text(
-                'KES 2400',
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 2.5,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Car Wash',
-              ),
-              Expanded(
-                child: Text(
-                  'KES 600',
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),
@@ -134,21 +132,21 @@ class MyBookingDetails extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
+        children: [
+          const Text(
             'Date & Time',
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: kPrimaryColor),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Text('22 Feb, 2022'),
+          Text(DateFormat('dd MMM yyyy').format(request.date!)),
           Text(
-            '10:00 AM',
-            style: TextStyle(color: Colors.grey),
+            DateFormat('hh:mm a').format(request.date!),
+            style: const TextStyle(color: Colors.grey),
           ),
         ],
       ),
@@ -162,20 +160,20 @@ class MyBookingDetails extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
+        children: [
+          const Text(
             'Mechanic Details',
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: kPrimaryColor),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Text('Best Mechanics'),
+          Text(request.mechanic!.name!),
           Text(
-            'Kileleshwa, Kenya',
+            request.mechanic!.address!,
             style: TextStyle(color: Colors.grey),
           ),
         ],
@@ -203,13 +201,13 @@ class MyBookingDetails extends StatelessWidget {
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
+            children: [
+              const Text(
                 'Model: ',
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
               Text(
-                'BMW X7',
+                request.vehicleModel!,
               ),
             ],
           ),
@@ -220,8 +218,8 @@ class MyBookingDetails extends StatelessWidget {
             'Problem: ',
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
-          const Text(
-            tProblem,
+          Text(
+            request.problem!,
           ),
         ],
       ),
