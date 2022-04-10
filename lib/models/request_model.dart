@@ -18,12 +18,14 @@ class RequestModel {
   final String? amount;
   final GeoPoint? userLocation;
   final Timestamp? createdAt;
+  final String? status;
 
   RequestModel(
       {this.problem,
       this.date,
       this.id,
       this.vehicleModel,
+      this.status,
       this.createdAt,
       this.mechanic,
       this.user,
@@ -38,6 +40,8 @@ class RequestModel {
       'date': date,
       'vehicleModel': vehicleModel,
       'amount': amount,
+      'location': userLocation,
+      'status': status,
       'mechanic': {
         'id': mechanic?.id,
         'name': mechanic?.name,
@@ -67,6 +71,9 @@ class RequestModel {
           .map((service) => ServiceModel.fromJson(service))
           .toList(),
       images: json['images'],
+      createdAt: json['createdAt'],
+      status: json['status'],
+      userLocation: json['location'],
     );
   }
 }

@@ -6,7 +6,9 @@ import 'package:mechanic/screens/home/widgets/my_marker.dart';
 
 class MechanicDetailsLocation extends StatefulWidget {
   final LatLng? location;
-  const MechanicDetailsLocation({Key? key, this.location}) : super(key: key);
+  final String? imageUrl;
+  const MechanicDetailsLocation({Key? key, this.location, this.imageUrl})
+      : super(key: key);
   @override
   _MechanicDetailsLocationState createState() =>
       _MechanicDetailsLocationState();
@@ -26,7 +28,8 @@ class _MechanicDetailsLocationState extends State<MechanicDetailsLocation> {
     _markers.add(Marker(
       markerId: const MarkerId('1'),
       icon: await MarkerIcon.downloadResizePictureCircle(
-          'https://www.kenyans.co.ke/files/styles/article_style/public/images/media/Mechanic.jpg?itok=-c2o5ygc',
+          widget.imageUrl ??
+              'https://www.kenyans.co.ke/files/styles/article_style/public/images/media/Mechanic.jpg?itok=-c2o5ygc',
           borderSize: 10,
           size: 130,
           addBorder: true,
@@ -72,7 +75,6 @@ class _MechanicDetailsLocationState extends State<MechanicDetailsLocation> {
                     myLocationEnabled: true,
                     onMapCreated: _onMapCreated,
                     markers: _markers,
-                    
                     initialCameraPosition: CameraPosition(
                         target: LatLng(widget.location!.latitude,
                             widget.location!.longitude),

@@ -78,6 +78,7 @@ class MechanicProfileBody extends StatelessWidget {
             height: 10,
           ),
           MechanicDetailsLocation(
+            imageUrl: mechanic.profile,
             location: LatLng(
                 mechanic.location!.latitude, mechanic.location!.longitude),
           ),
@@ -104,7 +105,7 @@ class MechanicProfileBody extends StatelessWidget {
           ),
           Text(
             'Open now(${mechanic.openingTime} - ${mechanic.closingTime})',
-            style:const TextStyle(color: kPrimaryColor),
+            style: const TextStyle(color: kPrimaryColor),
           ),
         ],
       ),
@@ -116,16 +117,16 @@ class MechanicProfileBody extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 5, top: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children:  [
-         const Text(
+        children: [
+          const Text(
             'About',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
-       const   SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Text(
-          mechanic.description!,
+            mechanic.description!,
           ),
         ],
       ),

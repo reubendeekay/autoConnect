@@ -73,21 +73,15 @@ class SelectedMechanicWidget extends StatelessWidget {
                     ],
                   ),
                   const Spacer(),
-                  Column(
-                    children: [
-                      const Text('Ksh 3,000',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: kPrimaryColor,
-                              fontWeight: FontWeight.w500)),
-                      const SizedBox(
-                        height: 2.5,
-                      ),
-                      Text(
-                        'Average Price',
-                        style: TextStyle(color: kTextColor, fontSize: 12),
-                      ),
-                    ],
+                  RaisedButton(
+                    onPressed: () {
+                      Get.to(() => MechanicProfileScreen(mechanic: mechanic));
+                    },
+                    child: const Text(
+                      'View Profile',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    color: kPrimaryColor,
                   )
                 ],
               ),
@@ -145,9 +139,9 @@ class SelectedMechanicPrompt extends StatelessWidget {
           child: GestureDetector(
             onTap: () {},
             child: DraggableScrollableSheet(
-              initialChildSize: 0.3,
-              maxChildSize: 0.6,
-              minChildSize: 0.17,
+              initialChildSize: 0.4,
+              maxChildSize: 0.8,
+              minChildSize: 0.2,
               builder: (ctx, controller) => AnimatedContainer(
                 duration: const Duration(milliseconds: 500),
                 child: Container(

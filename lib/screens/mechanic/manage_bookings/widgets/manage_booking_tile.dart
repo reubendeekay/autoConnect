@@ -16,7 +16,8 @@ class ManageBookingsTile extends StatelessWidget {
       leading: CircleAvatar(
         radius: 25,
         backgroundColor: kPrimaryColor,
-        backgroundImage: CachedNetworkImageProvider(booking.user!.imageUrl!),
+        backgroundImage: CachedNetworkImageProvider(booking.user!.imageUrl ??
+            'https://www.theupcoming.co.uk/wp-content/themes/topnews/images/tucuser-avatar-new.png'),
       ),
       title: Text(booking.services!.first.serviceName!),
       subtitle: Text('By ' + booking.user!.fullName!),
