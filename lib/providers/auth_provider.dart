@@ -162,6 +162,7 @@ class AuthProvider with ChangeNotifier {
         .get();
 
     _mechanic = MechanicModel(
+      id: results.id,
       address: results['address'],
       closingTime: results['closingTime'],
       openingTime: results['openingTime'],

@@ -47,26 +47,14 @@ class MechanicProvider with ChangeNotifier {
                 .contains(searchTerm.toLowerCase()) ||
             element['description']
                 .toLowerCase()
-                .contains(searchTerm.toLowerCase()) ||
-            element['services']
-                .toLowerCase()
                 .contains(searchTerm.toLowerCase()))
         .toList();
 
     notifyListeners();
 
-// [
-//   {
-//     1: '1',
-//   }
-//   {
-//     2: '2',
-//   }
-// ]
-
 //MAPPING MECHANICS INTO A MECHANIC MODEL
 //e Represents each individual element in the array obtained from fetching data from Cloud Firestore
-
+    print(searchResults.length);
     return searchResults
         .map<MechanicModel>((e) => MechanicModel(
               address: e['address'],

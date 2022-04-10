@@ -1,30 +1,28 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/models/request_model.dart';
 import 'package:mechanic/screens/mechanic/manage_bookings/widgets/admin_booking_details.dart';
 
 class ManageBookingsTile extends StatelessWidget {
-  const ManageBookingsTile({Key? key}) : super(key: key);
+  const ManageBookingsTile({Key? key, required this.booking}) : super(key: key);
+
+  final RequestModel booking;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: const CircleAvatar(
+      leading: CircleAvatar(
         radius: 25,
         backgroundColor: kPrimaryColor,
-        child: Center(
-          child: Icon(
-            Icons.person,
-            size: 45,
-            color: Colors.white,
-          ),
-        ),
+        backgroundImage: CachedNetworkImageProvider(booking.user!.imageUrl!),
       ),
-      title: const Text('Car Repair'),
-      subtitle: const Text('By Reuben Jefwa'),
-      trailing: const Text('11:30'),
+      title: Text(booking.services!.first.serviceName!),
+      subtitle: Text('By ' + booking.user!.fullName!),
+      // trailing: const Text(booking),
       onTap: () {
-        Get.to(() => const AdminBookingDetails());
+        Get.to(() => AdminBookingDetails(booking: booking));
       },
     );
   }

@@ -124,7 +124,7 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                 child: isLoading
                     ? const MyLoader()
                     : Text(
-                        'Pay KES ${(pricing.price - pricing.voucher - pricing.shipping).toStringAsFixed(0)}',
+                        'Pay KES ${(pricing.price).toStringAsFixed(0)}',
                         style: const TextStyle(color: Colors.white),
                       ),
               ),

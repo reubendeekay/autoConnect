@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/models/service_model.dart';
 import 'package:mechanic/models/user_model.dart';
 
 class RequestModel {
   final String? problem;
+  final String? id;
   final DateTime? date;
   final String? vehicleModel;
   final List<File> imageFiles = [];
@@ -14,13 +16,18 @@ class RequestModel {
   final MechanicModel? mechanic;
   final UserModel? user;
   final String? amount;
+  final GeoPoint? userLocation;
+  final Timestamp? createdAt;
 
   RequestModel(
       {this.problem,
       this.date,
+      this.id,
       this.vehicleModel,
+      this.createdAt,
       this.mechanic,
       this.user,
+      this.userLocation,
       this.services,
       this.amount,
       this.images});
@@ -45,8 +52,9 @@ class RequestModel {
     };
   }
 
-  factory RequestModel.fromJson(Map<String, dynamic> json) {
+  factory RequestModel.fromJson(dynamic json) {
     return RequestModel(
+      id: json.id,
       problem: json['problem'],
       date: json['date'].toDate(),
       vehicleModel: json['vehicleModel'],

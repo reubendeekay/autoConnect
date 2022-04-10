@@ -24,9 +24,6 @@ class PaymentSummaryWidget extends StatelessWidget {
           const Divider(),
           expenseItem(
               'Item(s) Price', 'KES ' + pricing.price.toStringAsFixed(0)),
-          expenseItem(
-              'Shipping Price', 'KES ' + pricing.shipping.toStringAsFixed(0)),
-          expenseItem('Voucher', '- KES ' + pricing.voucher.toStringAsFixed(0)),
         ],
       ),
     );
