@@ -104,19 +104,40 @@ class MechanicProvider with ChangeNotifier {
   Future<void> requestBooking(RequestModel booking) async {
     print(booking.toJson());
     final uid = FirebaseAuth.instance.currentUser!.uid;
+    final id =
+        FirebaseFirestore.instance.collection('requests').doc('mechanics').id;
     await FirebaseFirestore.instance
         .collection('requests')
         .doc('mechanics')
         .collection(booking.mechanic!.id!)
-        .doc()
+        .doc(id)
         .set(booking.toJson());
 
     await FirebaseFirestore.instance
         .collection('userData')
         .doc('bookings')
         .collection(uid)
-        .doc()
+        .doc(id)
         .set(booking.toJson());
+
+    notifyListeners();
+  }
+
+  Future<void> confirmRequest(
+      {String? userId, String? mechanicId, String? docId}) async {
+    await FirebaseFirestore.instance
+        .collection('requests')
+        .doc('mechanics')
+        .collection(mechanicId!)
+        .doc(docId)
+        .update({'status': 'confirmed'});
+
+    await FirebaseFirestore.instance
+        .collection('userData')
+        .doc('bookings')
+        .collection(userId!)
+        .doc(docId)
+        .update({'status': 'confirmed'});
 
     notifyListeners();
   }
