@@ -105,26 +105,29 @@ class _HomepageState extends State<Homepage> {
                         zoom: 15),
                   ),
 
-            Container(
-              color: Colors.white,
-              margin: const EdgeInsets.all(8.0),
-              child: Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: IconButton(
-                    onPressed: widget.opendrawer,
-                    icon: const Icon(
-                      Icons.menu,
-                      color: Colors.grey,
-                      size: 35,
-                    )),
-              ),
-            ),
-
-            const Positioned(
+            Positioned(
               left: 0,
               right: 0,
-              bottom: 15,
-              child: MapAppBar(),
+              top: 0,
+              child: Row(
+                children: [
+                  Container(
+                    color: Colors.white,
+                    margin: const EdgeInsets.all(5.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                          onTap: widget.opendrawer,
+                          child: const Icon(
+                            Icons.menu,
+                            color: Colors.grey,
+                            size: 25,
+                          )),
+                    ),
+                  ),
+                  const MapAppBar(),
+                ],
+              ),
             ),
             // const Positioned(
             //   bottom: 15,

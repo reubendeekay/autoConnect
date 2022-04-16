@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/screens/home/mechanic_photos.dart';
+import 'package:mechanic/screens/mechanic/service_tile.dart';
 import 'package:mechanic/screens/mechanic_profile/widgets/mechanic_details_location.dart';
 
 class MechanicProfileBody extends StatelessWidget {
@@ -57,12 +58,36 @@ class MechanicProfileBody extends StatelessWidget {
                 SizedBox(
                   width: 5,
                 ),
-                Text('(100 Reviews)'),
+                Text('(12 Reviews)'),
               ],
             ),
           ),
           openingHours(),
           services(),
+          const SizedBox(
+            height: 5,
+          ),
+          const Text(
+            'Services',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          ...List.generate(
+            mechanic.services!.length,
+            (index) {
+              return IgnorePointer(
+                ignoring: true,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                  child: ServiceTile(
+                    mechanic.services![index],
+                  ),
+                ),
+              );
+            },
+          ),
           const SizedBox(
             height: 5,
           ),

@@ -6,6 +6,7 @@ import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/screens/home/mechanic_photos.dart';
 import 'package:mechanic/screens/home/widgets/request_service_button.dart';
+import 'package:mechanic/screens/mechanic/service_tile.dart';
 import 'package:mechanic/screens/mechanic_profile/mechanic_profile_screen.dart';
 
 class SelectedMechanicWidget extends StatelessWidget {
@@ -17,10 +18,13 @@ class SelectedMechanicWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: ListView(
         controller: controller,
+        shrinkWrap: true,
         children: [
           GestureDetector(
             onTap: () {
@@ -87,36 +91,50 @@ class SelectedMechanicWidget extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            child: Row(
-              children: const [
-                SizedBox(
-                  width: 10,
-                ),
-                Text('4.5'),
-                SizedBox(
-                  width: 5,
-                ),
-                Icon(
-                  Icons.star,
-                  color: Colors.orange,
-                  size: 16,
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text('(100 Reviews)'),
-              ],
-            ),
-          ),
+          openingHours(),
           Container(
               margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: const Text(
-                'Featured Images',
+                'Services',
                 style: TextStyle(fontWeight: FontWeight.w500),
               )),
-          MechanicPhotos(mechanic.images!),
+          // MechanicPhotos(mechanic.images!),
+          ...List.generate(
+            mechanic.services!.length,
+            (index) {
+              return IgnorePointer(
+                ignoring: true,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                  child: ServiceTile(
+                    mechanic.services![index],
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget openingHours() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Opening Hours',
+            style: TextStyle(fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(
+            height: 2.5,
+          ),
+          Text(
+            'Open now(${mechanic.openingTime} - ${mechanic.closingTime})',
+            style: const TextStyle(color: kPrimaryColor),
+          ),
         ],
       ),
     );

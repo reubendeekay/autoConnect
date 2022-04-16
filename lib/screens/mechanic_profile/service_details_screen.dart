@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/models/request_model.dart';
 import 'package:mechanic/models/service_model.dart';
 import 'package:mechanic/providers/auth_provider.dart';
+import 'package:mechanic/providers/location_provider.dart';
 import 'package:mechanic/providers/payment_provider.dart';
 import 'package:mechanic/screens/mechanic/service_tile.dart';
 import 'package:mechanic/screens/payment/widgets/payment_screen.dart';
@@ -37,6 +39,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
     final pay = Provider.of<PaymentProvider>(
       context,
     );
+    final loc = Provider.of<LocationProvider>(context).locationData;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -176,6 +179,11 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
 
                         final request = RequestModel(
                           date: _selectedDate,
+                          createdAt: Timestamp.now(),
+                          status: 'pending',
+                          
+                          userLocation:
+                              GeoPoint(loc!.latitude!, loc.longitude!),
                           mechanic: widget.mech,
                           problem: problem,
                           user: user,

@@ -1,7 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mechanic/models/notification_model.dart';
 
 class NotificationsTile extends StatelessWidget {
-  const NotificationsTile({Key? key}) : super(key: key);
+  const NotificationsTile({Key? key, required this.notification})
+      : super(key: key);
+  final NotificationsModel notification;
 
   @override
   Widget build(BuildContext context) {
@@ -12,16 +16,17 @@ class NotificationsTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               CircleAvatar(
                 radius: 22,
+                backgroundImage: CachedNetworkImageProvider(
+                  notification.imageUrl!,
+                ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 15,
               ),
-              Expanded(
-                  child: Text(
-                      'Hello Reuben, your car has been serviced. Please go pick it up. Remember to leave a review')),
+              Expanded(child: Text(notification.message!)),
             ],
           ),
         ),

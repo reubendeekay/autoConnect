@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/helpers/my_loader.dart';
 import 'package:mechanic/models/service_model.dart';
+import 'package:mechanic/providers/auth_provider.dart';
+import 'package:mechanic/providers/mechanic_provider.dart';
+import 'package:provider/provider.dart';
 
 class EditServiceScreen extends StatefulWidget {
   const EditServiceScreen({Key? key, required this.service}) : super(key: key);
@@ -12,12 +18,15 @@ class EditServiceScreen extends StatefulWidget {
 
 class _EditServiceScreenState extends State<EditServiceScreen> {
   String? name, price;
-
+  File? imageFile;
+  bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final mechanicId =
+        Provider.of<AuthProvider>(context, listen: false).mechanic!.id;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Service'),
@@ -122,12 +131,47 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
                       margin: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 20),
                       child: RaisedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          try {
+                            await Provider.of<MechanicProvider>(context,
+                                    listen: false)
+                                .editService(
+                                    ServiceModel(
+                                      id: widget.service.id,
+                                      imageFile: imageFile,
+                                      price: price ?? widget.service.price,
+                                      serviceName:
+                                          name ?? widget.service.serviceName,
+                                    ),
+                                    mechanicId!,
+                                    widget.service);
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.of(context).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: const Text('Service edited'),
+                                backgroundColor: kPrimaryColor,
+                              ),
+                            );
+                          } catch (e) {
+                            print(e);
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
+                        },
                         color: kPrimaryColor,
-                        child: const Text(
-                          'Save Changes',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        child: isLoading
+                            ? MyLoader()
+                            : const Text(
+                                'Save Changes',
+                                style: TextStyle(color: Colors.white),
+                              ),
                       ))
                 ]),
               ),

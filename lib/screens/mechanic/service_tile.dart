@@ -38,7 +38,7 @@ class _ServiceTileState extends State<ServiceTile> {
         width: double.infinity,
         height: size.height * 0.1,
         constraints: const BoxConstraints(minHeight: 70),
-        color: isSelected ? kPrimaryColor.withOpacity(0.24) : Colors.white,
+        color: isSelected ? kPrimaryColor.withOpacity(0.24) : null,
         child: Column(
           children: [
             Expanded(

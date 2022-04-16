@@ -124,7 +124,7 @@ class AdminBookingDetails extends StatelessWidget {
                           );
                           Navigator.of(context).pop();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text('Request Confirmed'),
                             ),
                           );

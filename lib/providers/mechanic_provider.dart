@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:mechanic/helpers/my_refs.dart';
 import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/models/request_model.dart';
 import 'package:mechanic/models/service_model.dart';
@@ -71,6 +72,41 @@ class MechanicProvider with ChangeNotifier {
         .toList();
   }
 
+  Future<void> editService(ServiceModel services, String mechanicId,
+      ServiceModel previousService) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    String? serviceUrl;
+    if (services.imageFile != null) {
+      final servResult = await FirebaseStorage.instance
+          .ref('mechanics/$uid/services/')
+          .putFile(services.imageFile!);
+      serviceUrl = await servResult.ref.getDownloadURL();
+    }
+
+    await FirebaseFirestore.instance
+        .collection('mechanics')
+        .doc(mechanicId)
+        .update({
+      'services': FieldValue.arrayRemove([previousService.toJson()])
+    });
+    await FirebaseFirestore.instance
+        .collection('mechanics')
+        .doc(mechanicId)
+        .update({
+      'services': FieldValue.arrayUnion(
+        [
+          {
+            'serviceName': services.serviceName,
+            'price': services.price,
+            'imageUrl': serviceUrl ?? services.imageUrl,
+            'id': UniqueKey().toString(),
+          }
+        ],
+      )
+    });
+    notifyListeners();
+  }
+
   Future<void> addService(
       List<ServiceModel> services, String mechanicId) async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -138,6 +174,14 @@ class MechanicProvider with ChangeNotifier {
         .collection(userId!)
         .doc(docId)
         .update({'status': 'confirmed'});
+    await userDataRef.doc(userId).collection('notifications').doc(docId).set({
+      'imageUrl':
+          'https://previews.123rf.com/images/sarahdesign/sarahdesign1509/sarahdesign150900627/44517835-confirm-icon.jpg',
+      'message': 'Your booking has been confirmed by the mechanic',
+      'type': 'booking',
+      'createdAt': Timestamp.now(),
+      'id': docId,
+    });
 
     notifyListeners();
   }

@@ -7,6 +7,8 @@ import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/models/service_model.dart';
 import 'package:mechanic/models/user_model.dart';
 
+final uid = FirebaseAuth.instance.currentUser!.uid;
+
 class AuthProvider with ChangeNotifier {
   UserModel? _user;
   UserModel? get user => _user;

@@ -3,6 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mechanic/models/mechanic_model.dart';
+import 'package:mechanic/models/request_model.dart';
+
+final mechanicRequestsRef =
+    FirebaseFirestore.instance.collection('requests').doc('mechanics');
 
 class AdminUserProvider with ChangeNotifier {
   Future<void> registerMechanic(MechanicModel mech) async {

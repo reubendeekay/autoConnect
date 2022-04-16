@@ -127,23 +127,6 @@ class _DrawerWidgetState extends State<DrawerWidget>
           ),
           onTap: widget.closdDrawer,
         ),
-        ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 1),
-          leading: Icon(
-            Icons.person_outline_outlined,
-            color: Colors.white.withOpacity(0.2),
-          ),
-          title: Text(
-            user!.isMechanic! ? 'Mechanic Dashboard' : 'Become a Mechanic',
-            style: const TextStyle(color: Colors.white),
-          ),
-          onTap: () {
-            Get.to(() => user.isMechanic!
-                ? const MechanicDashboard()
-                : const MechanicRegisterScreen());
-          },
-        ),
         ...DrawerItems.all
             .map((item) => ListTile(
                   contentPadding:

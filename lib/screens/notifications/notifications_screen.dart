@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/helpers/my_refs.dart';
+import 'package:mechanic/models/notification_model.dart';
 import 'package:mechanic/screens/notifications/notifications_tile.dart';
 
 class NotificationsScreen extends StatelessWidget {
@@ -14,19 +17,30 @@ class NotificationsScreen extends StatelessWidget {
         backgroundColor: kPrimaryColor,
         elevation: 0,
       ),
-      body: ListView(
-        children:const [
-          NotificationsTile(),
-          NotificationsTile(),
-          NotificationsTile(),
-          NotificationsTile(),
-          NotificationsTile(),
-          NotificationsTile(),
-          NotificationsTile(),
-          NotificationsTile(),
-        ],
-      ),
+      body: StreamBuilder<QuerySnapshot>(
+          stream: userNofificationRef.orderBy('createdAt').snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: Text('No Notifications'),
+              );
+            }
+
+            List<DocumentSnapshot> docs = snapshot.data!.docs;
+
+            if (docs.isEmpty) {
+              return const Center(
+                child: Text('No Notifications'),
+              );
+            }
+            return ListView(
+                children: List.generate(
+                    docs.length,
+                    (index) => NotificationsTile(
+                          notification:
+                              NotificationsModel.fromJson(docs[index]),
+                        )));
+          }),
     );
   }
 }
-
