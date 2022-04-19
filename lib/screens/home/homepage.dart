@@ -13,10 +13,12 @@ import 'package:mechanic/providers/chat_provider.dart';
 import 'package:mechanic/providers/location_provider.dart';
 import 'package:mechanic/providers/mechanic_provider.dart';
 import 'package:mechanic/screens/home/incoming_map.dart';
+import 'package:mechanic/screens/home/review_container.dart';
 import 'package:mechanic/screens/home/selected_mechanic.dart';
 import 'package:mechanic/screens/home/widgets/bottom_map.dart';
 import 'package:mechanic/screens/home/widgets/map_appbar.dart';
 import 'package:mechanic/screens/home/widgets/my_marker.dart';
+import 'package:mechanic/screens/payment/widgets/payment_screen.dart';
 import 'package:mechanic/screens/side_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -95,16 +97,45 @@ class _HomepageState extends State<Homepage> {
                 .collection('userData')
                 .doc('bookings')
                 .collection(uid)
-                .where('status', isEqualTo: 'ongoing')
                 .snapshots(),
             builder: (context, snapshot) {
+              List<DocumentSnapshot> allDocs = snapshot.data!.docs;
               if (snapshot.hasData) {
-                if (snapshot.data!.docs.isNotEmpty) {
+                if (allDocs
+                    .where((element) => element['status'] == 'ongoing')
+                    .isNotEmpty) {
+                  final myDocs = allDocs
+                      .where((element) => element['status'] == 'ongoing')
+                      .toList();
                   return MapContainer(
-                      request:
-                          RequestModel.fromJson(snapshot.data!.docs.first));
+                      request: RequestModel.fromJson(myDocs.first));
                 }
               }
+
+              if (snapshot.hasData) {
+                if (allDocs
+                    .where((element) => element['status'] == 'completed')
+                    .isNotEmpty) {
+                  final myDocs = allDocs
+                      .where((element) => element['status'] == 'completed')
+                      .toList();
+                  return PaymentScreen(
+                      request: RequestModel.fromJson(myDocs.first));
+                }
+              }
+
+              if (snapshot.hasData) {
+                if (allDocs
+                    .where((element) => element['status'] == 'paid')
+                    .isNotEmpty) {
+                  final myDocs = allDocs
+                      .where((element) => element['status'] == 'paid')
+                      .toList();
+                  return ReviewContainer(
+                      request: RequestModel.fromJson(myDocs.first));
+                }
+              }
+
               return Stack(
                 children: [
                   // MyMarker(globalKey),

@@ -43,8 +43,6 @@ class _PaymentWidgetState extends State<PaymentWidget> {
     ];
     final size = MediaQuery.of(context).size;
 
-    final pricing = Provider.of<PaymentProvider>(context);
-
     return Container(
       height: size.height * 0.4,
       decoration: const BoxDecoration(
@@ -88,11 +86,11 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                     try {
                       await mpesa.lipaNaMpesa(
                         phoneNumber: phoneNumber.toString(),
-                        amount: pricing.price,
+                        amount: double.parse(widget.request.amount!),
                         accountReference: 'AutoConnect',
                         businessShortCode: "174379",
                         callbackUrl:
-                            "https://us-central1-my-autoconnect.cloudfunctions.net/lmno_callback_url/user?uid=$uid/${pricing.price}",
+                            "https://us-central1-my-autoconnect.cloudfunctions.net/lmno_callback_url/user?uid=$uid/${widget.request.amount}",
                       );
 
                       setState(() {
@@ -124,7 +122,7 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                 child: isLoading
                     ? const MyLoader()
                     : Text(
-                        'Pay KES ${(pricing.price).toStringAsFixed(0)}',
+                        'Pay KES ${widget.request.amount}',
                         style: const TextStyle(color: Colors.white),
                       ),
               ),

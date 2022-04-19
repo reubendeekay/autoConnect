@@ -140,8 +140,7 @@ class MechanicProvider with ChangeNotifier {
   Future<void> requestBooking(RequestModel booking) async {
     print(booking.toJson());
     final uid = FirebaseAuth.instance.currentUser!.uid;
-    final id =
-        FirebaseFirestore.instance.collection('requests').doc('mechanics').id;
+    final id = FirebaseFirestore.instance.collection('requests').doc().id;
     await FirebaseFirestore.instance
         .collection('requests')
         .doc('mechanics')
@@ -190,6 +189,53 @@ class MechanicProvider with ChangeNotifier {
       'type': 'booking',
       'createdAt': Timestamp.now(),
       'id': docId,
+    });
+
+    notifyListeners();
+  }
+
+  Future<void> payRequest(RequestModel booking) async {
+    print(booking.toJson());
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final id = FirebaseFirestore.instance.collection('requests').doc().id;
+    await FirebaseFirestore.instance
+        .collection('requests')
+        .doc('mechanics')
+        .collection(booking.mechanic!.id!)
+        .doc(id)
+        .update({
+      'status': 'paid',
+    });
+    await FirebaseFirestore.instance
+        .collection('userData')
+        .doc('bookings')
+        .collection(uid)
+        .doc(id)
+        .update({
+      'status': 'paid',
+    });
+    await userDataRef.doc(uid).collection('notifications').doc(id).set({
+      'imageUrl':
+          'https://www.insperity.com/wp-content/uploads/Pay_compression1200x600.png',
+      'message':
+          'You have successfully paid KES ${booking.amount} to  ${booking.mechanic!.name} .Thank you for using our service.',
+      'type': 'booking',
+      'createdAt': Timestamp.now(),
+      'id': id,
+    });
+
+    await userDataRef
+        .doc(booking.mechanic!.id!)
+        .collection('notifications')
+        .doc(id)
+        .set({
+      'imageUrl':
+          'https://www.insperity.com/wp-content/uploads/Pay_compression1200x600.png',
+      'message':
+          '${booking.user!.fullName!} has successfully paid KES ${booking.amount} for your service. Thank you for choosing our platform.',
+      'type': 'booking',
+      'createdAt': Timestamp.now(),
+      'id': id,
     });
 
     notifyListeners();

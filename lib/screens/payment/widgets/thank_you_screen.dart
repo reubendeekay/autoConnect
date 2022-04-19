@@ -28,7 +28,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
     super.initState();
     Future.delayed(Duration.zero, () async {
       await Provider.of<MechanicProvider>(context, listen: false)
-          .requestBooking(widget.request);
+          .payRequest(widget.request);
       Future.delayed(Duration(seconds: 5), () {
         Get.offAll(() => HidenDrawer());
       });
