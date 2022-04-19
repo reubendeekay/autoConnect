@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:marker_icon/marker_icon.dart';
 import 'package:mechanic/helpers/constants.dart';
@@ -6,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mechanic/helpers/loading_screen.dart';
 import 'package:mechanic/models/mechanic_model.dart';
+import 'package:mechanic/models/request_model.dart';
 import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/providers/chat_provider.dart';
 import 'package:mechanic/providers/location_provider.dart';
 import 'package:mechanic/providers/mechanic_provider.dart';
+import 'package:mechanic/screens/home/incoming_map.dart';
 import 'package:mechanic/screens/home/selected_mechanic.dart';
 import 'package:mechanic/screens/home/widgets/bottom_map.dart';
 import 'package:mechanic/screens/home/widgets/map_appbar.dart';
@@ -51,7 +54,7 @@ class _HomepageState extends State<Homepage> {
           },
           //circle to show the mechanic profile in map
           icon: await MarkerIcon.downloadResizePictureCircle(mechanic.profile!,
-              size: (size.height * .16).toInt(),
+              size: (size.height * .125).toInt(),
               borderSize: 10,
               addBorder: true,
               borderColor: kPrimaryColor),
@@ -87,56 +90,72 @@ class _HomepageState extends State<Homepage> {
       key: _key,
       // drawer: const SideDrawer(),
       body: SafeArea(
-        child: Stack(
-          children: [
-            // MyMarker(globalKey),
-            _locationData == null
-                ? const LoadingScreen()
-                : GoogleMap(
-                    markers: _markers,
-                    onMapCreated: _onMapCreated,
-                    mapType: MapType.normal,
-                    myLocationButtonEnabled: true,
-                    zoomControlsEnabled: true,
-                    myLocationEnabled: true,
-                    initialCameraPosition: CameraPosition(
-                        target: LatLng(
-                            _locationData.latitude!, _locationData.longitude!),
-                        zoom: 15),
-                  ),
-
-            Positioned(
-              left: 0,
-              right: 0,
-              top: 0,
-              child: Row(
+        child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('userData')
+                .doc('bookings')
+                .collection(uid)
+                .where('status', isEqualTo: 'ongoing')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data!.docs.isNotEmpty) {
+                  return MapContainer(
+                      request:
+                          RequestModel.fromJson(snapshot.data!.docs.first));
+                }
+              }
+              return Stack(
                 children: [
-                  Container(
-                    color: Colors.white,
-                    margin: const EdgeInsets.all(5.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                          onTap: widget.opendrawer,
-                          child: const Icon(
-                            Icons.menu,
-                            color: Colors.grey,
-                            size: 25,
-                          )),
+                  // MyMarker(globalKey),
+                  _locationData == null
+                      ? const LoadingScreen()
+                      : GoogleMap(
+                          markers: _markers,
+                          onMapCreated: _onMapCreated,
+                          mapType: MapType.normal,
+                          myLocationButtonEnabled: true,
+                          zoomControlsEnabled: true,
+                          myLocationEnabled: true,
+                          initialCameraPosition: CameraPosition(
+                              target: LatLng(_locationData.latitude!,
+                                  _locationData.longitude!),
+                              zoom: 15),
+                        ),
+
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    child: Row(
+                      children: [
+                        Container(
+                          color: Colors.white,
+                          margin: const EdgeInsets.all(5.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                                onTap: widget.opendrawer,
+                                child: const Icon(
+                                  Icons.menu,
+                                  color: Colors.grey,
+                                  size: 25,
+                                )),
+                          ),
+                        ),
+                        const MapAppBar(),
+                      ],
                     ),
                   ),
-                  const MapAppBar(),
+                  // const Positioned(
+                  //   bottom: 15,
+                  //   left: 0,
+                  //   right: 0,
+                  //   child: BottomMapWidget(),
+                  // )
                 ],
-              ),
-            ),
-            // const Positioned(
-            //   bottom: 15,
-            //   left: 0,
-            //   right: 0,
-            //   child: BottomMapWidget(),
-            // )
-          ],
-        ),
+              );
+            }),
       ),
     );
   }

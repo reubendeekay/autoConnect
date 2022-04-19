@@ -14,6 +14,7 @@ import 'package:mechanic/providers/location_provider.dart';
 import 'package:mechanic/providers/payment_provider.dart';
 import 'package:mechanic/screens/mechanic/service_tile.dart';
 import 'package:mechanic/screens/payment/widgets/payment_screen.dart';
+import 'package:mechanic/screens/payment/widgets/request_animation.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -163,7 +164,10 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
               height: 45,
               width: double.infinity,
               child: RaisedButton(
-                onPressed: pay.services.isEmpty
+                onPressed: pay.services.isEmpty ||
+                        imageFiles.isEmpty ||
+                        vehicleName == null ||
+                        problem == null
                     ? null
                     : () async {
                         List<String> imageUrls = [];
@@ -178,10 +182,9 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                         }
 
                         final request = RequestModel(
-                          date: _selectedDate,
+                          date: _selectedDate ?? DateTime.now(),
                           createdAt: Timestamp.now(),
                           status: 'pending',
-                          
                           userLocation:
                               GeoPoint(loc!.latitude!, loc.longitude!),
                           mechanic: widget.mech,
@@ -193,7 +196,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                           images: imageUrls,
                         );
 
-                        Get.to(() => PaymentScreen(
+                        Get.to(() => RequestAnimationScreen(
                               request: request,
                             ));
                       },

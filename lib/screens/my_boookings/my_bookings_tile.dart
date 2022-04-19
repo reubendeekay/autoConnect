@@ -9,6 +9,20 @@ class MyBookingsTile extends StatelessWidget {
   const MyBookingsTile({Key? key, required this.booking}) : super(key: key);
   final RequestModel booking;
 
+  Color color() {
+    if (booking.status == 'ongoing') {
+      return Colors.orange;
+    } else if (booking.status == 'completed') {
+      return Colors.green;
+    } else if (booking.status == 'cancelled') {
+      return Colors.grey;
+    } else if (booking.status == 'pending') {
+      return Colors.red;
+    }
+
+    return Colors.grey;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -88,10 +102,11 @@ class MyBookingsTile extends StatelessWidget {
               top: 10,
               child: Container(
                 padding: const EdgeInsets.all(5),
-                color: Colors.red,
-                child: const Text(
-                  'Pending',
-                  style: TextStyle(color: Colors.white, fontSize: 12),
+                color: color(),
+                child: Text(
+                  booking.status![0].toUpperCase() +
+                      booking.status!.substring(1),
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ))
         ],

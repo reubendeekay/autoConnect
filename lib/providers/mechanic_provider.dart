@@ -155,6 +155,15 @@ class MechanicProvider with ChangeNotifier {
         .collection(uid)
         .doc(id)
         .set(booking.toJson());
+    await userDataRef.doc(uid).collection('notifications').doc(id).set({
+      'imageUrl':
+          'https://website-assets-fs.freshworks.com/attachments/cjrufc17v02f1crg0zsp9gcq7-how-is-it-issue-tracking-software-used-2x.one-half.png',
+      'message':
+          'Your request for mechanic ${booking.mechanic!.name} has been sent. Once confirmed you will be notified.',
+      'type': 'booking',
+      'createdAt': Timestamp.now(),
+      'id': id,
+    });
 
     notifyListeners();
   }

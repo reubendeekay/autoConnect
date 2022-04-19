@@ -36,9 +36,8 @@ class MyBookingsScreen extends StatelessWidget {
             }
             final docs = snapshot.data!.docs;
             return ListView.builder(
-              itemBuilder: (ctx, index) => MyBookingsTile(
-                  booking: RequestModel.fromJson(
-                      docs[index].data() as Map<String, dynamic>)),
+              itemBuilder: (ctx, index) =>
+                  MyBookingsTile(booking: RequestModel.fromJson(docs[index])),
               itemCount: docs.length,
             );
           },

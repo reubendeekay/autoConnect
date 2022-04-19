@@ -10,12 +10,12 @@ class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          SizedBox(
-            
-            height: double.infinity,
-            width: double.infinity,
-            child: Lottie.asset('assets/map.json', fit: BoxFit.fitHeight)),
+      body: SizedBox(
+          height: double.infinity,
+          width: double.infinity,
+          child: Lottie.asset(
+            'assets/map.json',
+          )),
     );
   }
 }
@@ -46,7 +46,9 @@ class _InitialLoadingScreenState extends State<InitialLoadingScreen> {
         height: double.infinity,
         width: double.infinity,
         child: Center(
-            child: Lottie.asset('assets/map.json', fit: BoxFit.fitHeight)),
+            child: Lottie.asset(
+          'assets/map.json',
+        )),
       ),
     );
   }

@@ -105,6 +105,7 @@ class SelectedMechanicWidget extends StatelessWidget {
               return IgnorePointer(
                 ignoring: true,
                 child: Container(
+                  height: size.height * 0.1,
                   margin: const EdgeInsets.symmetric(horizontal: 15),
                   child: ServiceTile(
                     mechanic.services![index],
