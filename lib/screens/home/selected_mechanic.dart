@@ -6,7 +6,7 @@ import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/screens/home/mechanic_photos.dart';
 import 'package:mechanic/screens/home/widgets/request_service_button.dart';
-import 'package:mechanic/screens/mechanic/service_tile.dart';
+import 'package:mechanic/screens/home/service_tile.dart';
 import 'package:mechanic/screens/mechanic_profile/mechanic_profile_screen.dart';
 
 class SelectedMechanicWidget extends StatelessWidget {

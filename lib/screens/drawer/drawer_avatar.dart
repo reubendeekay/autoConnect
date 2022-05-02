@@ -26,7 +26,7 @@ class _ProgerssAvatarState extends State<ProgerssAvatar>
 
       _animation = Tween(begin: 0.0, end: 0.4).animate(_controller!)
         ..addListener(() {
-          setState(() {});
+          // setState(() {});
         });
 
       _controller!.forward();

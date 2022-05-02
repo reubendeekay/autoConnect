@@ -51,29 +51,20 @@ class AuthProvider with ChangeNotifier {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(_currentUser.user!.uid)
-        .set(
-
-            //set
-            //update/
-            //delete
-            // 'key':value
-            {
-          'userId': _currentUser.user!.uid,
-          'email': email,
-          'favourites': [],
-          'password': password,
-          'fullName': fullName,
-          'isOnline': true,
-          'lastSeen': Timestamp.now().millisecondsSinceEpoch,
-          'isAdmin': false,
-          'isMechanic': false,
-          'phoneNumber': phoneNumber,
-          'address': '',
-          'profilePic':
-              'https://www.theupcoming.co.uk/wp-content/themes/topnews/images/tucuser-avatar-new.png',
-          'dateOfBirth': null,
-          'nationalId': '',
-        });
+        .set({
+      'userId': _currentUser.user!.uid,
+      'email': email,
+      'password': password,
+      'fullName': fullName,
+      'isOnline': true,
+      'lastSeen': Timestamp.now().millisecondsSinceEpoch,
+      'isAdmin': false,
+      'isMechanic': false,
+      'phoneNumber': phoneNumber,
+      'profilePic':
+          'https://www.theupcoming.co.uk/wp-content/themes/topnews/images/tucuser-avatar-new.png',
+      'dateOfBirth': null,
+    });
     await FirebaseMessaging.instance.getToken().then((token) {
       FirebaseFirestore.instance
           .collection('users')

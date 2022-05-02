@@ -17,9 +17,7 @@ import 'package:mechanic/screens/chat/chat_screen.dart';
 import 'package:mechanic/screens/drawer/hidden_drawer.dart';
 import 'package:mechanic/screens/favourites/favourites_screen.dart';
 import 'package:mechanic/screens/home/homepage.dart';
-import 'package:mechanic/screens/mechanic/manage_bookings/manage_bookings_screen.dart';
-import 'package:mechanic/screens/mechanic/mechanic_dashboard.dart';
-import 'package:mechanic/screens/mechanic/mechanic_register_screen.dart';
+
 import 'package:mechanic/screens/mechanic_profile/mechanic_profile_screen.dart';
 import 'package:mechanic/screens/my_boookings/my_bookings.dart';
 import 'package:mechanic/screens/notifications/notifications_screen.dart';
@@ -30,9 +28,10 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    return const Material(child: GlobalErrorScreen());
-  };
+  // ErrorWidget.builder = (FlutterErrorDetails details) {
+
+  //   return const Material(child: GlobalErrorScreen());
+  // };
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -74,10 +73,6 @@ class MyApp extends StatelessWidget {
           FavouritesScreen.routeName: (ctx) => const FavouritesScreen(),
           NotificationsScreen.routeName: (ctx) => const NotificationsScreen(),
           ChatScreen.routeName: (ctx) => const ChatScreen(),
-          MechanicRegisterScreen.routeName: (ctx) =>
-              const MechanicRegisterScreen(),
-          MechanicDashboard.routeName: (ctx) => const MechanicDashboard(),
-          ManageBookingsScreen.routeName: (ctx) => const ManageBookingsScreen(),
           MechanicProfileScreen.routeName: (ctx) =>
               const MechanicProfileScreen(),
           ChatRoom.routeName: (ctx) => ChatRoom(),

@@ -5,16 +5,10 @@ class NotificationsModel {
   final String? message;
   final String? imageUrl;
   final String? type;
-  final String? senderId;
   final Timestamp? createdAt;
 
   NotificationsModel(
-      {this.id,
-      this.message,
-      this.imageUrl,
-      this.type,
-      this.senderId,
-      this.createdAt});
+      {this.id, this.message, this.imageUrl, this.type, this.createdAt});
 
   factory NotificationsModel.fromJson(dynamic json) {
     return NotificationsModel(
@@ -22,7 +16,6 @@ class NotificationsModel {
       message: json['message'],
       imageUrl: json['imageUrl'],
       type: json['type'],
-      senderId: json['senderId'],
       createdAt: json['createdAt'],
     );
   }

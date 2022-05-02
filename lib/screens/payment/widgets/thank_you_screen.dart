@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/helpers/loading_screen.dart';
 import 'package:mechanic/models/request_model.dart';
 import 'package:mechanic/providers/mechanic_provider.dart';
 import 'package:mechanic/screens/drawer/hidden_drawer.dart';
@@ -27,10 +28,10 @@ class _ThankYouPageState extends State<ThankYouPage> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () async {
-      await Provider.of<MechanicProvider>(context, listen: false)
+      Provider.of<MechanicProvider>(context, listen: false)
           .payRequest(widget.request);
-      Future.delayed(Duration(seconds: 5), () {
-        Get.offAll(() => HidenDrawer());
+      Future.delayed(Duration(seconds: 3), () {
+        Get.offAll(() => InitialLoadingScreen());
       });
     });
   }
@@ -102,8 +103,10 @@ class _ThankYouPageState extends State<ThankYouPage> {
               SizedBox(height: screenHeight * 0.06),
               Flexible(
                   child: GestureDetector(
-                onTap: () {
-                  Get.offAll(() => Homepage());
+                onTap: () async {
+                  await Provider.of<MechanicProvider>(context, listen: false)
+                      .payRequest(widget.request);
+                  Get.offAll(() => HidenDrawer());
                 },
                 child: Container(
                   height: 50,

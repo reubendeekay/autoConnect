@@ -5,9 +5,12 @@ import 'package:mechanic/screens/home/widgets/request_service_button.dart';
 import 'package:mechanic/screens/mechanic_profile/widgets/mechanic_profile_body.dart';
 
 class MechanicProfileScreen extends StatelessWidget {
-  const MechanicProfileScreen({Key? key, this.mechanic}) : super(key: key);
+  const MechanicProfileScreen(
+      {Key? key, this.mechanic, this.hasRegister = true})
+      : super(key: key);
   static const routeName = '/mechanic-profile';
   final MechanicModel? mechanic;
+  final bool hasRegister;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +20,7 @@ class MechanicProfileScreen extends StatelessWidget {
         child: Stack(
           children: [
             CustomScrollView(
+              shrinkWrap: true,
               slivers: <Widget>[
                 SliverAppBar(
                   elevation: 0,
@@ -47,13 +51,14 @@ class MechanicProfileScreen extends StatelessWidget {
                         childCount: 1))
               ],
             ),
-            Positioned(
-                bottom: 10,
-                left: 15,
-                right: 15,
-                child: RequestServiceButton(
-                  mechanic: mechanic!,
-                )),
+            if (hasRegister)
+              Positioned(
+                  bottom: 10,
+                  left: 15,
+                  right: 15,
+                  child: RequestServiceButton(
+                    mechanic: mechanic!,
+                  )),
           ],
         ),
       ),

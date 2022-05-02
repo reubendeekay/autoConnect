@@ -45,7 +45,9 @@ class MyBookingsTile extends StatelessWidget {
                 AspectRatio(
                   aspectRatio: 2.5,
                   child: cachedImage(
-                    booking.services!.first.imageUrl!,
+                    booking.services!.isEmpty
+                        ? 'https://autogarageinc.com/wp-content/uploads/2020/03/Screenshot_3.jpg'
+                        : booking.services!.first.imageUrl!,
                     fit: BoxFit.cover,
                   ),
                 ),

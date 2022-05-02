@@ -41,6 +41,7 @@ class RequestModel {
       'vehicleModel': vehicleModel,
       'amount': amount,
       'location': userLocation,
+      'createdAt': createdAt,
       'status': status,
       'mechanic': {
         'id': mechanic?.id,

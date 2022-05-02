@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
+import 'package:mechanic/helpers/loading_screen.dart';
 
-class GlobalErrorScreen extends StatelessWidget {
+class GlobalErrorScreen extends StatefulWidget {
   const GlobalErrorScreen({Key? key}) : super(key: key);
+
+  @override
+  State<GlobalErrorScreen> createState() => _GlobalErrorScreenState();
+}
+
+class _GlobalErrorScreenState extends State<GlobalErrorScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(const Duration(seconds: 10), () {
+      Get.off(() => const InitialLoadingScreen());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +36,7 @@ class GlobalErrorScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    offset: Offset(0, 5),
+                    offset: const Offset(0, 5),
                     blurRadius: 25,
                     color: Colors.black.withOpacity(0.17),
                   ),
@@ -30,7 +46,9 @@ class GlobalErrorScreen extends StatelessWidget {
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)),
-                onPressed: () {},
+                onPressed: () {
+                  Get.off(() => const InitialLoadingScreen());
+                },
                 child: Text("Refresh".toUpperCase()),
               ),
             ),

@@ -8,11 +8,9 @@ import 'package:mechanic/screens/chat/chat_screen.dart';
 import 'package:mechanic/screens/drawer/drawer_avatar.dart';
 import 'package:mechanic/screens/drawer/drawer_chart.dart';
 
-import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mechanic/screens/home/homepage.dart';
-import 'package:mechanic/screens/mechanic/mechanic_dashboard.dart';
-import 'package:mechanic/screens/mechanic/mechanic_register_screen.dart';
+import 'package:mechanic/screens/mechanic_profile/widgets/mechanic_register_screen.dart';
+
 import 'package:mechanic/screens/my_boookings/my_bookings.dart';
 import 'package:mechanic/screens/notifications/notifications_screen.dart';
 import 'package:mechanic/screens/user/user_profile.dart';
@@ -88,7 +86,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
     return Column(
       children: [
         _buildButton(context),
-        ProgerssAvatar(),
+        const ProgerssAvatar(),
         SizedBox(
           height: he * 0.02,
         ),
@@ -127,6 +125,22 @@ class _DrawerWidgetState extends State<DrawerWidget>
           ),
           onTap: widget.closdDrawer,
         ),
+        if (!user!.isMechanic!)
+          ListTile(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 1),
+            leading: Icon(
+              Icons.person_outline,
+              color: Colors.white.withOpacity(0.2),
+            ),
+            title: const Text(
+              'Register as a Mechanic',
+              style: TextStyle(color: Colors.white),
+            ),
+            onTap: () {
+              Get.to(() => const MechanicRegisterScreen());
+            },
+          ),
         ...DrawerItems.all
             .map((item) => ListTile(
                   contentPadding:

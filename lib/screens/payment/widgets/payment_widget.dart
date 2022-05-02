@@ -77,7 +77,6 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)),
                 onPressed: () async {
-                  final uid = FirebaseAuth.instance.currentUser!.uid;
                   setState(() {
                     isValidate = true;
                     isLoading = true;
@@ -86,37 +85,35 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                     try {
                       await mpesa.lipaNaMpesa(
                         phoneNumber: phoneNumber.toString(),
-                        amount: double.parse(widget.request.amount!),
+                        amount: double.parse(widget.request.amount!.toString()),
                         accountReference: 'AutoConnect',
                         businessShortCode: "174379",
-                        callbackUrl:
-                            "https://us-central1-my-autoconnect.cloudfunctions.net/lmno_callback_url/user?uid=$uid/${widget.request.amount}",
+                        // callbackUrl:
+                        //     "https://us-central1-my-autoconnect.cloudfunctions.net/lmno_callback_url/user?uid=$uid/${widget.request.amount}/${widget.request.mechanic!.id!}",
+                        callbackUrl: "https://google.com/",
+                      );
+                      Get.off(
+                        ThankYouPage(
+                          request: widget.request,
+                        ),
                       );
 
                       setState(() {
                         isLoading = false;
                       });
-
-                      Get.off(() => ThankYouPage(
-                            request: widget.request,
-                          ));
                     } catch (e) {
-                      print(e);
-                      setState(() {
-                        isLoading = false;
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.toString()),
+                      Get.off(
+                        ThankYouPage(
+                          request: widget.request,
                         ),
                       );
                     }
-                    // await mpesaPayment(
-                    //   amount:
-                    //       pricing.price - pricing.voucher - pricing.shipping,
-                    //   phone: phoneNumber.toString(),
-                    // );
                   }
+                  // await mpesaPayment(
+                  //   amount:
+                  //       pricing.price - pricing.voucher - pricing.shipping,
+                  //   phone: phoneNumber.toString(),
+                  // );
                 },
                 color: kPrimaryColor,
                 child: isLoading

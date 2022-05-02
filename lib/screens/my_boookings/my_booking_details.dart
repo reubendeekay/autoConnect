@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/models/request_model.dart';
+import 'package:mechanic/screens/home/incoming_map.dart';
 
 class MyBookingDetails extends StatelessWidget {
   const MyBookingDetails({Key? key, required this.request}) : super(key: key);
@@ -32,13 +33,13 @@ class MyBookingDetails extends StatelessWidget {
               ],
             ),
           ),
-          bottomWidget(),
+          bottomWidget(context),
         ],
       ),
     );
   }
 
-  Widget bottomWidget() {
+  Widget bottomWidget(BuildContext context) {
     return Container(
         color: Colors.white,
         padding: const EdgeInsets.all(15),
@@ -60,24 +61,30 @@ class MyBookingDetails extends StatelessWidget {
               ),
             ],
           ),
+                    if (request.status == 'pending' || request.status == 'ongoing')
+
           const SizedBox(
             height: 50,
           ),
-          SizedBox(
-            height: 45,
-            width: double.infinity,
-            child: RaisedButton(
-              onPressed: () {},
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
-              color: kPrimaryColor,
-              child: const Text(
-                'Cancel Booking',
-                style: TextStyle(color: Colors.white),
+          if (request.status == 'pending' || request.status == 'ongoing')
+            SizedBox(
+              height: 45,
+              width: double.infinity,
+              child: RaisedButton(
+                onPressed: () {
+                  cancelRequest(context, request);
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                color: kPrimaryColor,
+                child: const Text(
+                  'Cancel Booking',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 15),
+          if (request.status == 'pending' || request.status == 'ongoing')
+            const SizedBox(height: 15),
         ]));
   }
 
@@ -174,7 +181,7 @@ class MyBookingDetails extends StatelessWidget {
           Text(request.mechanic!.name!),
           Text(
             request.mechanic!.address!,
-            style: TextStyle(color: Colors.grey),
+            style: const TextStyle(color: Colors.grey),
           ),
         ],
       ),
@@ -226,6 +233,3 @@ class MyBookingDetails extends StatelessWidget {
     );
   }
 }
-
-const tProblem =
-    'After a significant number of daily drives and road trips, you begin to notice an unusual tyre wear i.e the tread wear of a particular tyre does not match with the rest of the tyres. This means that you need to get wheel balancing done on an immediate basis. Interestingly, the front tyres of a car are more prone to uneven tyre wear as they experience more pressure and weight offset.';

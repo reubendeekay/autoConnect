@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/helpers/horizontal_tab.dart';
 import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/screens/home/mechanic_photos.dart';
-import 'package:mechanic/screens/mechanic/service_tile.dart';
+import 'package:mechanic/screens/home/service_tile.dart';
+import 'package:mechanic/screens/mechanic_profile/mechanic_reviews.dart';
 import 'package:mechanic/screens/mechanic_profile/widgets/mechanic_details_location.dart';
+
+List<String> mechanicProfileTabs = [
+  'Services',
+  'Photos',
+  'Reviews',
+  'Location',
+];
 
 class MechanicProfileBody extends StatelessWidget {
   const MechanicProfileBody({Key? key, required this.mechanic})
@@ -13,14 +23,43 @@ class MechanicProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Container(
       padding: const EdgeInsets.all(15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            mechanic.name!,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          Row(
+            children: [
+              Text(
+                mechanic.name!,
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              const Spacer(),
+              InkWell(
+                  onTap: () async {
+                    bool? res = await FlutterPhoneDirectCaller.callNumber(
+                        mechanic.phone!);
+
+                    if (res == false) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Oops could not make phone call'),
+                      ));
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.blueGrey),
+                    child: const Icon(
+                      Icons.call,
+                      size: 18,
+                      color: Colors.white,
+                    ),
+                  )),
+            ],
           ),
           const SizedBox(height: 5),
           Row(
@@ -42,73 +81,79 @@ class MechanicProfileBody extends StatelessWidget {
               vertical: 5,
             ),
             child: Row(
-              children: const [
-                SizedBox(
+              children: [
+                const SizedBox(
                   width: 10,
                 ),
-                Text('4.5'),
-                SizedBox(
+                Text(
+                  (mechanic.analytics!.rating! /
+                          mechanic.analytics!.ratingCount!)
+                      .toStringAsFixed(1),
+                ),
+                const SizedBox(
                   width: 5,
                 ),
-                Icon(
+                const Icon(
                   Icons.star,
                   color: Colors.orange,
                   size: 16,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
-                Text('(12 Reviews)'),
+                Text('(${mechanic.analytics!.ratingCount!} Reviews)'),
               ],
             ),
           ),
           openingHours(),
-          services(),
           const SizedBox(
             height: 5,
           ),
-          const Text(
-            'Services',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          ...List.generate(
-            mechanic.services!.length,
-            (index) {
-              return IgnorePointer(
-                ignoring: true,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 15),
-                  child: ServiceTile(
-                    mechanic.services![index],
-                  ),
-                ),
-              );
-            },
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          const Text(
-            'More Photos',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          MechanicPhotos(mechanic.images!),
+          about(),
           const SizedBox(
             height: 10,
           ),
-          MechanicDetailsLocation(
-            imageUrl: mechanic.profile,
-            location: LatLng(
-                mechanic.location!.latitude, mechanic.location!.longitude),
+          SizedBox(
+            height: size.height * .6,
+            child: HorizontalTabView(
+              contents: [
+                ListView(
+                  children: List.generate(
+                    mechanic.services!.length,
+                    (index) {
+                      return IgnorePointer(
+                        ignoring: true,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 15),
+                          child: ServiceTile(
+                            mechanic.services![index],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                MechanicPhotos(mechanic.images!),
+                MechanicReviews(
+                  mechanicId: mechanic.id!,
+                ),
+                MechanicDetailsLocation(
+                  imageUrl: mechanic.profile,
+                  location: LatLng(mechanic.location!.latitude,
+                      mechanic.location!.longitude),
+                ),
+              ],
+              initialIndex: 0,
+              contentScrollAxis: Axis.horizontal,
+              backgroundColor: Colors.grey.shade100,
+              tabs: List.generate(
+                mechanicProfileTabs.length,
+                (index) => Tab(text: mechanicProfileTabs[index]),
+              ),
+            ),
           ),
           const SizedBox(
-            height: 65,
+            height: 48,
           ),
         ],
       ),
@@ -137,7 +182,7 @@ class MechanicProfileBody extends StatelessWidget {
     );
   }
 
-  Widget services() {
+  Widget about() {
     return Container(
       margin: const EdgeInsets.only(bottom: 5, top: 10),
       child: Column(

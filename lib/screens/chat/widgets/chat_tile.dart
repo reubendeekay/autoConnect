@@ -6,7 +6,6 @@ import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/models/user_model.dart';
 import 'package:mechanic/providers/chat_provider.dart';
 import 'package:mechanic/screens/chat/chat_room.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ChatTile extends StatelessWidget {
@@ -32,7 +31,6 @@ class ChatTile extends StatelessWidget {
                   '_' +
                   FirebaseAuth.instance.currentUser!.uid;
         }).toList();
-        print(room.length);
         await FirebaseFirestore.instance
             .collection('users')
             .doc(chatModel!.user!.userId!)

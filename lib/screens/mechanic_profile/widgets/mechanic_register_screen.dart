@@ -5,25 +5,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/helpers/loading_screen.dart';
 import 'package:mechanic/helpers/my_loader.dart';
 import 'package:mechanic/models/mechanic_model.dart';
-import 'package:mechanic/models/service_model.dart';
 import 'package:mechanic/providers/admin_user_provider.dart';
 import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/providers/location_provider.dart';
-import 'package:mechanic/screens/mechanic/add_service.dart';
-import 'package:mechanic/screens/mechanic/mechanic_dashboard.dart';
-import 'package:mechanic/screens/mechanic/mechanic_register/add_on_map.dart';
-import 'package:mechanic/screens/mechanic/mechanic_register/widgets/time_picker.dart';
+import 'package:mechanic/screens/drawer/hidden_drawer.dart';
+import 'package:mechanic/screens/mechanic_profile/widgets/add_on_map.dart';
+import 'package:mechanic/screens/mechanic_profile/widgets/add_service.dart';
+import 'package:mechanic/screens/mechanic_profile/widgets/time_picker.dart';
+
 import 'package:media_picker_widget/media_picker_widget.dart';
 import 'package:progressive_time_picker/progressive_time_picker.dart';
 import 'package:provider/provider.dart';
 
 class MechanicRegisterScreen extends StatefulWidget {
   const MechanicRegisterScreen({Key? key}) : super(key: key);
-  static const routeName = 'mechanic-register-screen';
+  static const routeName = 'mechanic_admin-register-screen';
 
   @override
   State<MechanicRegisterScreen> createState() => _MechanicRegisterScreenState();
@@ -40,7 +40,7 @@ class _MechanicRegisterScreenState extends State<MechanicRegisterScreen> {
   PickedTime? openingTime;
   PickedTime? closingTime;
   LatLng? location;
-  List<ServiceModel> services = [];
+  List<dynamic> services = [];
   bool isLoading = false;
 
   @override
@@ -336,7 +336,9 @@ class _MechanicRegisterScreenState extends State<MechanicRegisterScreen> {
                         closingTime == null ||
                         address == null ||
                         loc.latitude == null ||
-                        loc.longitude == null
+                        loc.longitude == null ||
+                        imageFiles.isEmpty ||
+                        coverFile == null
                     ? null
                     : () async {
                         setState(() {
@@ -374,8 +376,11 @@ class _MechanicRegisterScreenState extends State<MechanicRegisterScreen> {
                           await Provider.of<AuthProvider>(context)
                               .getMechanicDetails(
                                   FirebaseAuth.instance.currentUser!.uid);
-
-                          Get.to(() => const MechanicDashboard());
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text('Success. You are now a mechanic'),
+                          ));
+                          Get.to(() => const InitialLoadingScreen());
                         } catch (e) {
                           print(e);
                           Navigator.of(context).pop();
@@ -458,10 +463,15 @@ class _MechanicRegisterScreenState extends State<MechanicRegisterScreen> {
                             fontWeight: FontWeight.bold),
                         actionBarPosition: ActionBarPosition.top,
                         blurStrength: 2,
-                        completeButtonStyle: const ButtonStyle(),
-                        completeTextStyle:
-                            TextStyle(color: Theme.of(context).iconTheme.color),
+                        completeButtonStyle: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(kPrimaryColor),
+                          textStyle: MaterialStateProperty.all(
+                            const TextStyle(color: Colors.white),
+                          ),
+                        ),
                         completeText: 'Select',
+                        completeTextStyle: const TextStyle(color: Colors.white),
                       ),
                     )),
               ));

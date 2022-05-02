@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/helpers/my_loader.dart';
+import 'package:mechanic/helpers/my_shimmer.dart';
+import 'package:mechanic/models/user_model.dart';
 import 'package:mechanic/providers/auth_provider.dart';
+import 'package:media_picker_widget/media_picker_widget.dart';
 
 import 'package:provider/provider.dart';
 
@@ -17,19 +23,11 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-  // final nameController = TextEditingController();
-  // final emailController = TextEditingController();
-  // final phoneController = TextEditingController();
-  // final idController = TextEditingController();
-  // final dateofBirthController = TextEditingController();
-  // final postalController = TextEditingController();
-
-  String fullName = '';
-  String email = '';
-  String phoneNumber = '';
-  String nationalId = '123';
-  String dateofBirth = '';
-  String postal = '';
+  String? fullName;
+  String? email;
+  String? phoneNumber;
+  String? password;
+  bool isLoading = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -171,12 +169,12 @@ class _UserProfileState extends State<UserProfile> {
                       obscureText: true,
                       onChanged: (val) {
                         setState(() {
-                          nationalId = val;
+                          password = val;
                         });
                       },
                       onSaved: (val) {
                         setState(() {
-                          nationalId = val!;
+                          password = val!;
                         });
                       },
                       validator: (val) {
@@ -186,37 +184,6 @@ class _UserProfileState extends State<UserProfile> {
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 15),
                           labelText: 'Password',
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(5),
-                          )),
-                    ),
-                  ),
-
-                  //////////////////////////////
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                    child: TextFormField(
-                      // controller: controller,
-                      validator: (val) {
-                        return null;
-                      },
-                      onSaved: (val) {
-                        setState(() {
-                          postal = val!;
-                        });
-                      },
-                      initialValue: 'Adress not set',
-                      onChanged: (val) {
-                        setState(() {
-                          postal = val;
-                        });
-                      },
-                      decoration: InputDecoration(
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 15),
-                          labelText: 'Postal Address',
                           border: OutlineInputBorder(
                             borderSide: const BorderSide(color: Colors.grey),
                             borderRadius: BorderRadius.circular(5),
@@ -235,14 +202,31 @@ class _UserProfileState extends State<UserProfile> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
-                onPressed: () async {},
+                onPressed: () async {
+                  final myUser = UserModel(
+                      email: email ?? user.email,
+                      fullName: fullName ?? user.fullName,
+                      phoneNumber: phoneNumber ?? user.phoneNumber);
+                  setState(() {
+                    isLoading = true;
+                  });
+
+                  await Provider.of<AuthProvider>(context, listen: false)
+                      .updateProfile(myUser, uid);
+                  setState(() {
+                    isLoading = false;
+                  });
+                },
                 color: kPrimaryColor,
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 60.0, vertical: 15),
-                  child: Text(
-                    'Save Changes',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 60.0, vertical: 15),
+                  child: isLoading
+                      ? const MyLoader()
+                      : const Text(
+                          'Save Changes',
+                          style: TextStyle(color: Colors.white),
+                        ),
                 ),
               ),
             ),
@@ -264,6 +248,8 @@ class UserPicture extends StatefulWidget {
 class _UserPictureState extends State<UserPicture> {
   // List<Media> mediaList = [];
   final ScrollController scrollController = ScrollController();
+  List<Media> mediaList = [];
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -289,16 +275,23 @@ class _UserPictureState extends State<UserPicture> {
                     )
                   ])),
           Center(
-            child: CircleAvatar(
-              radius: 50,
-              backgroundImage: CachedNetworkImageProvider(user!.imageUrl!),
-            ),
+            child: isLoading
+                ? const MyShimmer(
+                    child: CircleAvatar(
+                      radius: 50,
+                    ),
+                  )
+                : CircleAvatar(
+                    radius: 50,
+                    backgroundImage:
+                        CachedNetworkImageProvider(user!.imageUrl!),
+                  ),
           ),
           Positioned(
             right: -10,
             bottom: -2,
             child: GestureDetector(
-              // onTap: () => openImagePicker(context),
+              onTap: () => openImagePicker(context),
               child: Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
@@ -321,86 +314,82 @@ class _UserPictureState extends State<UserPicture> {
     );
   }
 
-//   void openImagePicker(BuildContext context) {
-//     // openCamera(onCapture: (image){
-//     //   setState(()=> mediaList = [image]);
-//     // });
-//     showModalBottomSheet(
-//         isScrollControlled: true,
-//         backgroundColor: Colors.transparent,
-//         shape: RoundedRectangleBorder(
-//           borderRadius: const BorderRadius.only(
-//               topLeft: const Radius.circular(20),
-//               topRight: const Radius.circular(20)),
-//         ),
-//         context: context,
-//         builder: (context) {
-//           return GestureDetector(
-//               behavior: HitTestBehavior.opaque,
-//               onTap: () => Navigator.of(context).pop(),
-//               child: DraggableScrollableSheet(
-//                 initialChildSize: 0.6,
-//                 maxChildSize: 0.95,
-//                 minChildSize: 0.6,
-//                 builder: (ctx, controller) => AnimatedContainer(
-//                     duration: Duration(milliseconds: 500),
-//                     color: Colors.white,
-//                     child: MediaPicker(
-//                       scrollController: controller,
-//                       mediaList: mediaList,
-//                       onPick: (selectedList) {
-//                         setState(() => mediaList = selectedList);
-//                         Navigator.pop(context);
-//                       },
-//                       onCancel: () => Navigator.pop(context),
-//                       mediaCount: MediaCount.single,
-//                       mediaType: MediaType.image,
-//                       decoration: PickerDecoration(
-//                         cancelIcon: Icon(Icons.close),
-//                         albumTitleStyle: TextStyle(
-//                             color: Colors.black, fontWeight: FontWeight.bold),
-//                         actionBarPosition: ActionBarPosition.top,
-//                         blurStrength: 2,
-//                         completeText: 'Change',
-//                       ),
-//                     )),
-//               ));
-//         }).then((_) async {
-//       if (mediaList.isNotEmpty) {
-//         double mediaSize =
-//             mediaList.first.file.readAsBytesSync().lengthInBytes /
-//                 (1024 * 1024);
+  void openImagePicker(BuildContext context) {
+    // openCamera(onCapture: (image){
+    //   setState(()=> mediaList = [image]);
+    // });
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        ),
+        context: context,
+        builder: (context) {
+          return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => Navigator.of(context).pop(),
+              child: DraggableScrollableSheet(
+                initialChildSize: 0.6,
+                maxChildSize: 0.95,
+                minChildSize: 0.6,
+                builder: (ctx, controller) => AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    color: Colors.white,
+                    child: MediaPicker(
+                      scrollController: controller,
+                      mediaList: mediaList,
+                      onPick: (selectedList) {
+                        setState(() => mediaList = selectedList);
+                        Navigator.pop(context);
+                      },
+                      onCancel: () => Navigator.pop(context),
+                      mediaCount: MediaCount.single,
+                      mediaType: MediaType.image,
+                      decoration: PickerDecoration(
+                        cancelIcon: const Icon(Icons.close),
+                        albumTitleStyle: const TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                        actionBarPosition: ActionBarPosition.top,
+                        blurStrength: 2,
+                        completeText: 'Change',
+                      ),
+                    )),
+              ));
+        }).then((_) async {
+      if (mediaList.isNotEmpty) {
+        double mediaSize =
+            mediaList.first.file!.readAsBytesSync().lengthInBytes /
+                (1024 * 1024);
 
-//         if (mediaSize < 1.0001) {
-//           final image = await FirebaseStorage.instance
-//               .ref(
-//                   'userData/profilePics/${FirebaseAuth.instance.currentUser.uid}')
-//               .putFile(mediaList.first.file);
+        if (mediaSize < 1.0001) {
+          setState(() {
+            isLoading = true;
+          });
+          final image = await FirebaseStorage.instance
+              .ref(
+                  'userData/profilePics/${FirebaseAuth.instance.currentUser!.uid}')
+              .putFile(mediaList.first.file!);
 
-//           final url = await image.ref.getDownloadURL();
-//           await FirebaseFirestore.instance
-//               .collection('users')
-//               .doc(FirebaseAuth.instance.currentUser.uid)
-//               .update({
-//             'profilePic': url,
-//           });
-//         } else {
-//           ScaffoldMessenger.of(context).showSnackBar(
-//               SnackBar(content: Text('Image should be less than 1 MB')));
-//         }
+          final url = await image.ref.getDownloadURL();
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .update({
+            'profilePic': url,
+          });
+          setState(() {
+            isLoading = false;
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Image should be less than 1 MB')));
+        }
 
-//         showDialog(
-//             context: context,
-//             builder: (context) => AlertDialog(
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(15),
-//                   ),
-//                   content: DoneIcon(),
-//                 ));
-
-//         Future.delayed(Duration(milliseconds: 2000))
-//             .then((_) => Navigator.pop(context));
-//       }
-//     });
-//   }
+        Future.delayed(const Duration(milliseconds: 2000))
+            .then((_) => Navigator.pop(context));
+      }
+    });
+  }
 }

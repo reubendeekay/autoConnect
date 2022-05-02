@@ -16,45 +16,24 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        shrinkWrap: true,
-        children: [
-          Container(
-            margin: const EdgeInsets.fromLTRB(15, 15, 15, 5),
-            child: Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(Icons.arrow_back)),
-                const Text(
-                  'Chat',
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: kPrimaryColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(CupertinoIcons.search),
-                  onPressed: () {
-                    Get.to(() => const ChatScreenSearch());
-                  },
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-              ],
-            ),
+      appBar: AppBar(
+        elevation: 0.5,
+        title: const Text(
+          'Chat',
+          style: TextStyle(color: Colors.black),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(CupertinoIcons.search),
+            onPressed: () {
+              Get.to(() => const ChatScreenSearch());
+            },
           ),
-          const Divider(
-            thickness: 1,
-          ),
-          ChatScreenWidget(),
         ],
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
+      body: ChatScreenWidget(),
     );
   }
 }

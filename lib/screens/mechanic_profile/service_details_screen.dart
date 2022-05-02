@@ -12,7 +12,7 @@ import 'package:mechanic/models/service_model.dart';
 import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/providers/location_provider.dart';
 import 'package:mechanic/providers/payment_provider.dart';
-import 'package:mechanic/screens/mechanic/service_tile.dart';
+import 'package:mechanic/screens/home/service_tile.dart';
 import 'package:mechanic/screens/payment/widgets/payment_screen.dart';
 import 'package:mechanic/screens/payment/widgets/request_animation.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
@@ -263,10 +263,15 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                             fontWeight: FontWeight.bold),
                         actionBarPosition: ActionBarPosition.top,
                         blurStrength: 2,
-                        completeButtonStyle: const ButtonStyle(),
-                        completeTextStyle:
-                            TextStyle(color: Theme.of(context).iconTheme.color),
+                        completeButtonStyle: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(kPrimaryColor),
+                          textStyle: MaterialStateProperty.all(
+                            const TextStyle(color: Colors.white),
+                          ),
+                        ),
                         completeText: 'Select',
+                        completeTextStyle: const TextStyle(color: Colors.white),
                       ),
                     )),
               ));

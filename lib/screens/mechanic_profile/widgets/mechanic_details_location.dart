@@ -47,16 +47,6 @@ class _MechanicDetailsLocationState extends State<MechanicDetailsLocation> {
         const SizedBox(
           height: 10,
         ),
-        const Text(
-          'Location',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(
-          height: 15,
-        ),
         AspectRatio(
           aspectRatio: 16 / 9,
           child: Container(

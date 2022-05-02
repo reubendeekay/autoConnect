@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lottie/lottie.dart' hide Marker;
 import 'package:marker_icon/marker_icon.dart';
 import 'package:mechanic/helpers/constants.dart';
 
@@ -12,14 +13,13 @@ import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/providers/chat_provider.dart';
 import 'package:mechanic/providers/location_provider.dart';
 import 'package:mechanic/providers/mechanic_provider.dart';
+import 'package:mechanic/screens/home/cancelled_widget.dart';
 import 'package:mechanic/screens/home/incoming_map.dart';
 import 'package:mechanic/screens/home/review_container.dart';
 import 'package:mechanic/screens/home/selected_mechanic.dart';
-import 'package:mechanic/screens/home/widgets/bottom_map.dart';
 import 'package:mechanic/screens/home/widgets/map_appbar.dart';
-import 'package:mechanic/screens/home/widgets/my_marker.dart';
-import 'package:mechanic/screens/payment/widgets/payment_screen.dart';
-import 'package:mechanic/screens/side_drawer.dart';
+import 'package:mechanic/screens/payment/widgets/initialize_payment.dart';
+import 'package:mechanic/screens/payment/widgets/updated_payment.dart';
 import 'package:provider/provider.dart';
 
 class Homepage extends StatefulWidget {
@@ -56,7 +56,7 @@ class _HomepageState extends State<Homepage> {
           },
           //circle to show the mechanic profile in map
           icon: await MarkerIcon.downloadResizePictureCircle(mechanic.profile!,
-              size: (size.height * .125).toInt(),
+              size: (size.height * .13).toInt(),
               borderSize: 10,
               addBorder: true,
               borderColor: kPrimaryColor),
@@ -96,35 +96,42 @@ class _HomepageState extends State<Homepage> {
             stream: FirebaseFirestore.instance
                 .collection('userData')
                 .doc('bookings')
-                .collection(uid)
+                .collection(FirebaseAuth.instance.currentUser!.uid)
+                .orderBy(
+                  'createdAt',
+                )
                 .snapshots(),
             builder: (context, snapshot) {
-              List<DocumentSnapshot> allDocs = snapshot.data!.docs;
               if (snapshot.hasData) {
+                List<DocumentSnapshot> allDocs = snapshot.data!.docs;
                 if (allDocs
-                    .where((element) => element['status'] == 'ongoing')
+                    .where((element) => element['status'] == 'denied')
                     .isNotEmpty) {
                   final myDocs = allDocs
-                      .where((element) => element['status'] == 'ongoing')
+                      .where((element) => element['status'] == 'denied')
                       .toList();
-                  return MapContainer(
-                      request: RequestModel.fromJson(myDocs.first));
+                  final RequestModel request = RequestModel.fromJson(myDocs[0]);
+                  return CancelledWidget(request: request, isDenied: true);
                 }
-              }
-
-              if (snapshot.hasData) {
                 if (allDocs
-                    .where((element) => element['status'] == 'completed')
+                    .where((element) => element['status'] == 'cancelled')
                     .isNotEmpty) {
                   final myDocs = allDocs
-                      .where((element) => element['status'] == 'completed')
+                      .where((element) => element['status'] == 'cancelled')
                       .toList();
-                  return PaymentScreen(
+                  final RequestModel request = RequestModel.fromJson(myDocs[0]);
+                  return CancelledWidget(request: request);
+                }
+
+                if (allDocs
+                    .where((element) => element['status'] == 'updated')
+                    .isNotEmpty) {
+                  final myDocs = allDocs
+                      .where((element) => element['status'] == 'updated')
+                      .toList();
+                  return UpdatedPaymentContainer(
                       request: RequestModel.fromJson(myDocs.first));
                 }
-              }
-
-              if (snapshot.hasData) {
                 if (allDocs
                     .where((element) => element['status'] == 'paid')
                     .isNotEmpty) {
@@ -132,6 +139,26 @@ class _HomepageState extends State<Homepage> {
                       .where((element) => element['status'] == 'paid')
                       .toList();
                   return ReviewContainer(
+                      request: RequestModel.fromJson(myDocs.first));
+                }
+
+                if (allDocs
+                    .where((element) => element['status'] == 'completed')
+                    .isNotEmpty) {
+                  final myDocs = allDocs
+                      .where((element) => element['status'] == 'completed')
+                      .toList();
+                  return InitializePayment(
+                      request: RequestModel.fromJson(myDocs.first));
+                }
+
+                if (allDocs
+                    .where((element) => element['status'] == 'ongoing')
+                    .isNotEmpty) {
+                  final myDocs = allDocs
+                      .where((element) => element['status'] == 'ongoing')
+                      .toList();
+                  return IncomingMapScreen(
                       request: RequestModel.fromJson(myDocs.first));
                 }
               }

@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 
 class ServiceTile extends StatefulWidget {
   final ServiceModel service;
-  const ServiceTile(this.service, {Key? key}) : super(key: key);
+  const ServiceTile(this.service, {Key? key, this.isFile = false})
+      : super(key: key);
+  final bool isFile;
   @override
   _ServiceTileState createState() => _ServiceTileState();
 }

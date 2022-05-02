@@ -8,8 +8,9 @@ class MechanicPhotos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider(
-      items: pictures
+    return ListView(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      children: pictures
           .map((e) => Container(
               margin: const EdgeInsets.symmetric(horizontal: 5),
               child: AspectRatio(
@@ -20,19 +21,6 @@ class MechanicPhotos extends StatelessWidget {
                 ),
               )))
           .toList(),
-      options: CarouselOptions(
-        aspectRatio: 16 / 7,
-        viewportFraction: 0.8,
-        initialPage: 0,
-        enableInfiniteScroll: true,
-        reverse: false,
-        autoPlay: true,
-        autoPlayInterval: const Duration(seconds: 10),
-        autoPlayAnimationDuration: const Duration(seconds: 2),
-        autoPlayCurve: Curves.fastLinearToSlowEaseIn,
-        // enlargeCenterPage: true,
-        scrollDirection: Axis.horizontal,
-      ),
     );
   }
 }

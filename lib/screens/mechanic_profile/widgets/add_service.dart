@@ -4,11 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/helpers/service_tile_shimmer.dart';
+import 'package:mechanic/models/service_model.dart';
 import 'package:mechanic/providers/mechanic_provider.dart';
-import 'package:mechanic/screens/mechanic/service_tile.dart';
+import 'package:mechanic/screens/home/service_tile.dart';
+
 import 'package:media_picker_widget/media_picker_widget.dart';
 
-import 'package:mechanic/models/service_model.dart';
 import 'package:provider/provider.dart';
 
 class AddServices extends StatefulWidget {
@@ -62,7 +63,10 @@ class _AddServicesState extends State<AddServices> {
                 margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 12),
                 child: Stack(
                   children: [
-                    ServiceTile(services[index]),
+                    ServiceTile(
+                      services[index],
+                      isFile: true,
+                    ),
                     Positioned(
                         right: 10,
                         top: 5,
@@ -236,17 +240,19 @@ class _AddServicesState extends State<AddServices> {
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
               height: 45,
               child: RaisedButton(
-                onPressed: () async {
-                  final uid = FirebaseAuth.instance.currentUser!.uid;
-                  if (widget.isDashboard) {
-                    await Provider.of<MechanicProvider>(context, listen: false)
-                        .addService(services, uid);
-                    return;
-                  } else {
-                    widget.onCompleted!(services);
-                  }
-                  Navigator.of(context).pop();
-                },
+                onPressed: services.isEmpty
+                    ? null
+                    : () async {
+                        final uid = FirebaseAuth.instance.currentUser!.uid;
+                        if (widget.isDashboard) {
+                          await Provider.of<MechanicProvider>(context,
+                                  listen: false)
+                              .addService(services, uid);
+                        } else {
+                          widget.onCompleted!(services);
+                        }
+                        Navigator.of(context).pop();
+                      },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),
                 color: kPrimaryColor,
@@ -307,7 +313,15 @@ class _AddServicesState extends State<AddServices> {
                             color: Colors.black, fontWeight: FontWeight.bold),
                         actionBarPosition: ActionBarPosition.top,
                         blurStrength: 2,
+                        completeButtonStyle: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(kPrimaryColor),
+                          textStyle: MaterialStateProperty.all(
+                            const TextStyle(color: Colors.white),
+                          ),
+                        ),
                         completeText: 'Change',
+                        completeTextStyle: const TextStyle(color: Colors.white),
                       ),
                     )),
               ));

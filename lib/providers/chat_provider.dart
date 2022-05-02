@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -243,21 +244,22 @@ class ChatProvider with ChangeNotifier {
           .then((value) => {
                 if (value.exists)
                   {
-                    users.add(
-                      ChatTileModel(
-                          chatRoomId: element.id,
-                          latestMessageSenderId: element['sentBy'],
-                          user: UserModel(
-                              fullName: value['fullName'],
-                              imageUrl: value['profilePic'],
-                              userId: value['userId'],
-                              phoneNumber: value['phoneNumber'],
-                              lastSeen: value['lastSeen'],
-                              isOnline: value['isOnline'],
-                              isMechanic: value['isAdmin']),
-                          latestMessage: element['latestMessage'],
-                          time: element['sentAt']),
-                    ),
+                    if (users.where((e) => e.chatRoomId == element.id).isEmpty)
+                      users.add(
+                        ChatTileModel(
+                            chatRoomId: element.id,
+                            latestMessageSenderId: element['sentBy'],
+                            user: UserModel(
+                                fullName: value['fullName'],
+                                imageUrl: value['profilePic'],
+                                userId: value['userId'],
+                                phoneNumber: value['phoneNumber'],
+                                lastSeen: value['lastSeen'],
+                                isOnline: value['isOnline'],
+                                isMechanic: value['isAdmin']),
+                            latestMessage: element['latestMessage'],
+                            time: element['sentAt']),
+                      ),
                   }
               });
     });

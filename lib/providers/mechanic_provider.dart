@@ -3,8 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mechanic/helpers/my_refs.dart';
+import 'package:mechanic/models/analytics_model.dart';
 import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/models/request_model.dart';
+import 'package:mechanic/models/review_model.dart';
 import 'package:mechanic/models/service_model.dart';
 
 class MechanicProvider with ChangeNotifier {
@@ -15,95 +17,41 @@ class MechanicProvider with ChangeNotifier {
     final results =
         await FirebaseFirestore.instance.collection('mechanics').get();
 
+    List<AnalyticsModel> anaytics = [];
+
+    anaytics = await Future.wait(results.docs.map((result) async {
+      final data = await FirebaseFirestore.instance
+          .collection('mechanics')
+          .doc(result.id)
+          .collection('account')
+          .doc('analytics')
+          .get();
+      return AnalyticsModel.fromJson(data);
+    }).toList());
+
 //MAPPPING THE ARRAY OF MAPS FROM FIREBASE TO A MECHANIC MODEL
-    _mechanics = results.docs
-        .map<MechanicModel>((e) => MechanicModel(
-              address: e['address'],
-              closingTime: e['closingTime'],
-              openingTime: e['openingTime'],
-              profile: e['profile'],
-              description: e['description'],
-              images: e['images'],
-              location: e['location'],
-              phone: e['phone'],
-              name: e['name'],
-              id: e.id,
-              services:
-                  e['services'].map((k) => ServiceModel.fromJson(k)).toList(),
-            ))
-        .toList();
 
-    notifyListeners();
-  }
+    final myResults = results.docs;
+    _mechanics = List.generate(
+        myResults.length,
+        (index) => MechanicModel(
+              address: myResults[index]['address'],
+              closingTime: myResults[index]['closingTime'],
+              openingTime: myResults[index]['openingTime'],
+              profile: myResults[index]['profile'],
+              analytics: anaytics[index],
+              description: myResults[index]['description'],
+              images: myResults[index]['images'],
+              location: myResults[index]['location'],
+              isBusy: myResults[index]['isBusy'],
+              phone: myResults[index]['phone'],
+              name: myResults[index]['name'],
+              id: myResults[index].id,
+              services: myResults[index]['services']
+                  .map((k) => ServiceModel.fromJson(k))
+                  .toList(),
+            ));
 
-  Future<List<MechanicModel>> searchMechanic(String searchTerm) async {
-    final results =
-        await FirebaseFirestore.instance.collection('mechanics').get();
-
-    final searchResults = results.docs
-        .where((element) =>
-            element['name'].toLowerCase().contains(searchTerm.toLowerCase()) ||
-            element['address']
-                .toLowerCase()
-                .contains(searchTerm.toLowerCase()) ||
-            element['description']
-                .toLowerCase()
-                .contains(searchTerm.toLowerCase()))
-        .toList();
-
-    notifyListeners();
-
-//MAPPING MECHANICS INTO A MECHANIC MODEL
-//e Represents each individual element in the array obtained from fetching data from Cloud Firestore
-    print(searchResults.length);
-    return searchResults
-        .map<MechanicModel>((e) => MechanicModel(
-              address: e['address'],
-              closingTime: e['closingTime'],
-              openingTime: e['openingTime'],
-              profile: e['profile'],
-              description: e['description'],
-              images: e['images'],
-              location: e['location'],
-              phone: e['phone'],
-              name: e['name'],
-              id: e.id,
-            ))
-        .toList();
-  }
-
-  Future<void> editService(ServiceModel services, String mechanicId,
-      ServiceModel previousService) async {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
-    String? serviceUrl;
-    if (services.imageFile != null) {
-      final servResult = await FirebaseStorage.instance
-          .ref('mechanics/$uid/services/')
-          .putFile(services.imageFile!);
-      serviceUrl = await servResult.ref.getDownloadURL();
-    }
-
-    await FirebaseFirestore.instance
-        .collection('mechanics')
-        .doc(mechanicId)
-        .update({
-      'services': FieldValue.arrayRemove([previousService.toJson()])
-    });
-    await FirebaseFirestore.instance
-        .collection('mechanics')
-        .doc(mechanicId)
-        .update({
-      'services': FieldValue.arrayUnion(
-        [
-          {
-            'serviceName': services.serviceName,
-            'price': services.price,
-            'imageUrl': serviceUrl ?? services.imageUrl,
-            'id': UniqueKey().toString(),
-          }
-        ],
-      )
-    });
     notifyListeners();
   }
 
@@ -137,8 +85,61 @@ class MechanicProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<List<MechanicModel>> searchMechanic(String searchTerm) async {
+    final results =
+        await FirebaseFirestore.instance.collection('mechanics').get();
+
+    final searchResults = results.docs
+        .where((element) =>
+            element['name'].toLowerCase().contains(searchTerm.toLowerCase()) ||
+            element['address']
+                .toLowerCase()
+                .contains(searchTerm.toLowerCase()) ||
+            element['description']
+                .toLowerCase()
+                .contains(searchTerm.toLowerCase()))
+        .toList();
+
+    notifyListeners();
+
+    List<AnalyticsModel> anaytics = [];
+
+    anaytics = await Future.wait(results.docs.map((result) async {
+      final data = await FirebaseFirestore.instance
+          .collection('mechanics')
+          .doc(result.id)
+          .collection('account')
+          .doc('analytics')
+          .get();
+      return AnalyticsModel.fromJson(data);
+    }).toList());
+
+//MAPPING MECHANICS INTO A MECHANIC MODEL
+//e Represents each individual element in the array obtained from fetching data from Cloud Firestore
+
+    final myResults = results.docs;
+    return List.generate(
+        myResults.length,
+        (index) => MechanicModel(
+              address: myResults[index]['address'],
+              closingTime: myResults[index]['closingTime'],
+              openingTime: myResults[index]['openingTime'],
+              profile: myResults[index]['profile'],
+              analytics: anaytics[index],
+              description: myResults[index]['description'],
+              images: myResults[index]['images'],
+              location: myResults[index]['location'],
+              isBusy: myResults[index]['isBusy'],
+              phone: myResults[index]['phone'],
+              name: myResults[index]['name'],
+              id: myResults[index].id,
+              services: myResults[index]['services']
+                  .map((k) => ServiceModel.fromJson(k))
+                  .toList(),
+            ));
+  }
+
   Future<void> requestBooking(RequestModel booking) async {
-    print(booking.toJson());
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final id = FirebaseFirestore.instance.collection('requests').doc().id;
     await FirebaseFirestore.instance
@@ -163,41 +164,26 @@ class MechanicProvider with ChangeNotifier {
       'createdAt': Timestamp.now(),
       'id': id,
     });
-
-    notifyListeners();
-  }
-
-  Future<void> confirmRequest(
-      {String? userId, String? mechanicId, String? docId}) async {
-    await FirebaseFirestore.instance
-        .collection('requests')
-        .doc('mechanics')
-        .collection(mechanicId!)
-        .doc(docId)
-        .update({'status': 'confirmed'});
-
-    await FirebaseFirestore.instance
-        .collection('userData')
-        .doc('bookings')
-        .collection(userId!)
-        .doc(docId)
-        .update({'status': 'confirmed'});
-    await userDataRef.doc(userId).collection('notifications').doc(docId).set({
+    await userDataRef
+        .doc(booking.mechanic!.id)
+        .collection('notifications')
+        .doc(id)
+        .set({
       'imageUrl':
-          'https://previews.123rf.com/images/sarahdesign/sarahdesign1509/sarahdesign150900627/44517835-confirm-icon.jpg',
-      'message': 'Your booking has been confirmed by the mechanic',
+          'https://website-assets-fs.freshworks.com/attachments/cjrufc17v02f1crg0zsp9gcq7-how-is-it-issue-tracking-software-used-2x.one-half.png',
+      'message':
+          'Your request for mechanic ${booking.mechanic!.name} has been sent. Once confirmed you will be notified.',
       'type': 'booking',
       'createdAt': Timestamp.now(),
-      'id': docId,
+      'id': id,
     });
 
     notifyListeners();
   }
 
   Future<void> payRequest(RequestModel booking) async {
-    print(booking.toJson());
     final uid = FirebaseAuth.instance.currentUser!.uid;
-    final id = FirebaseFirestore.instance.collection('requests').doc().id;
+    final id = booking.id;
     await FirebaseFirestore.instance
         .collection('requests')
         .doc('mechanics')
@@ -214,6 +200,15 @@ class MechanicProvider with ChangeNotifier {
         .update({
       'status': 'paid',
     });
+
+    await FirebaseFirestore.instance
+        .doc('mechanics/${booking.mechanic!.id}/account/analytics')
+        .update({
+      'completedRequests': FieldValue.increment(1),
+      'balance': FieldValue.increment(double.parse(booking.amount!)),
+      'totalEarnings': FieldValue.increment(double.parse(booking.amount!)),
+    });
+
     await userDataRef.doc(uid).collection('notifications').doc(id).set({
       'imageUrl':
           'https://www.insperity.com/wp-content/uploads/Pay_compression1200x600.png',
@@ -233,6 +228,59 @@ class MechanicProvider with ChangeNotifier {
           'https://www.insperity.com/wp-content/uploads/Pay_compression1200x600.png',
       'message':
           '${booking.user!.fullName!} has successfully paid KES ${booking.amount} for your service. Thank you for choosing our platform.',
+      'type': 'booking',
+      'createdAt': Timestamp.now(),
+      'id': id,
+    });
+
+    notifyListeners();
+  }
+
+  Future<void> sendRating(ReviewModel review) async {
+    await FirebaseFirestore.instance
+        .doc('mechanics/${review.mechanicId!}/account/analytics')
+        .update({
+      'ratingCount': FieldValue.increment(1),
+      'rating': FieldValue.increment(review.rating!),
+    });
+
+    await FirebaseFirestore.instance
+        .collection('mechanics/${review.mechanicId!}/reviews')
+        .doc()
+        .set(review.toJson());
+
+    notifyListeners();
+  }
+
+  Future<void> reportPayment(RequestModel booking) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final id = booking.id;
+    await FirebaseFirestore.instance
+        .collection('requests')
+        .doc('mechanics')
+        .collection(booking.mechanic!.id!)
+        .doc(id)
+        .update({
+      'status': 'reported',
+    });
+    await FirebaseFirestore.instance
+        .collection('userData')
+        .doc('bookings')
+        .collection(uid)
+        .doc(id)
+        .update({
+      'status': 'reported',
+    });
+
+    await userDataRef
+        .doc(booking.mechanic!.id!)
+        .collection('notifications')
+        .doc(id)
+        .set({
+      'imageUrl':
+          'https://static.wixstatic.com/media/b11507_4a144943276543ccaa3776f6857ff47d~mv2.png/v1/fit/w_609%2Ch_349%2Cal_c/file.png',
+      'message':
+          '${booking.user!.fullName!} has reported your payment for your service.',
       'type': 'booking',
       'createdAt': Timestamp.now(),
       'id': id,

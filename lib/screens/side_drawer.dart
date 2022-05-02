@@ -9,8 +9,7 @@ import 'package:get/route_manager.dart';
 
 import 'package:mechanic/screens/favourites/favourites_screen.dart';
 import 'package:mechanic/screens/home/homepage.dart';
-import 'package:mechanic/screens/mechanic/mechanic_dashboard.dart';
-import 'package:mechanic/screens/mechanic/mechanic_register_screen.dart';
+
 import 'package:mechanic/screens/my_boookings/my_bookings.dart';
 import 'package:mechanic/screens/notifications/notifications_screen.dart';
 import 'package:mechanic/screens/user/user_profile.dart';
@@ -55,13 +54,6 @@ class _SideDrawerState extends State<SideDrawer> {
         'title': 'Chat',
         'icon': FontAwesomeIcons.comment,
         'screen': ChatScreen.routeName,
-      },
-      {
-        'title': isMechanic! ? 'Mechanic Dashboard' : 'Become a Mechanic',
-        'icon': FontAwesomeIcons.car,
-        'screen': isMechanic
-            ? MechanicDashboard.routeName
-            : MechanicRegisterScreen.routeName,
       },
       {
         'title': 'Notifications',

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/models/message_model.dart';
 import 'package:mechanic/models/user_model.dart';
@@ -90,8 +91,15 @@ class ChatRoom extends StatelessWidget {
               Icons.call,
               size: 20,
             ),
-            onPressed: () {
-              launch('tel:${user.phoneNumber}');
+            onPressed: () async {
+              bool? res =
+                  await FlutterPhoneDirectCaller.callNumber(user.phoneNumber!);
+
+              if (res == false) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Oops could not make phone call'),
+                ));
+              }
             },
           ),
           const SizedBox(

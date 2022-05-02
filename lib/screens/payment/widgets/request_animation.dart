@@ -26,7 +26,7 @@ class _RequestAnimationScreenState extends State<RequestAnimationScreen> {
       await Provider.of<MechanicProvider>(context, listen: false)
           .requestBooking(widget.request);
     });
-    Future.delayed(const Duration(milliseconds: 10500), () {
+    Future.delayed(const Duration(milliseconds: 800), () {
       setState(() {
         isFinished = true;
       });
@@ -38,15 +38,30 @@ class _RequestAnimationScreenState extends State<RequestAnimationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(children: [
-        Lottie.asset('assets/request.json'),
+        Column(
+          children: [
+            SizedBox(
+              height: size.height * 0.25,
+            ),
+            Lottie.asset('assets/request.json'),
+          ],
+        ),
         AnimatedPositioned(
-            bottom: isFinished ? 100 : -100,
+            bottom: isFinished ? size.height * 0.3 : -100,
             child: AnimatedOpacity(
                 duration: const Duration(seconds: 1),
                 opacity: isFinished ? 1 : 0,
-                child: const Text('Request Sent')),
+                child: SizedBox(
+                  width: size.width,
+                  child: const Center(
+                      child: Text(
+                    'Request Sent',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  )),
+                )),
             duration: const Duration(milliseconds: 500))
       ]),
     );

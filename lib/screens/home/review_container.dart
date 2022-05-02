@@ -17,11 +17,12 @@ class _ReviewContainerState extends State<ReviewContainer> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 6), () {
       setState(() {
         isLoading = true;
       });
       showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (context) => SimpleDialog(
               shape: RoundedRectangleBorder(

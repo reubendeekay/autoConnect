@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class InputWidget extends StatelessWidget {
   final String? hintText;
-  final IconData? suffixIcon;
+  final Widget? suffixIcon;
   final bool? obscureText;
   final Function(String value)? onChanged;
 
@@ -32,12 +32,7 @@ class InputWidget extends StatelessWidget {
           onChanged!(value);
         },
         decoration: InputDecoration(
-          suffixIcon: suffixIcon == null
-              ? null
-              : Icon(
-                  suffixIcon,
-                  color: const Color.fromRGBO(105, 108, 121, 1),
-                ),
+          suffixIcon: suffixIcon,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           border: const OutlineInputBorder(

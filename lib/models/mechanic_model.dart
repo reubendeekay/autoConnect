@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mechanic/models/analytics_model.dart';
 import 'package:mechanic/models/service_model.dart';
 
 class MechanicModel {
   final String? name;
   final String? profile;
   final File? profileFile;
+  final bool? isBusy;
   List<dynamic>? images = [];
   List<File>? fileImages = [];
   final String? phone;
@@ -14,6 +16,8 @@ class MechanicModel {
   final String? openingTime;
   final String? closingTime;
   final String? address;
+   AnalyticsModel? analytics;
+
   List<dynamic>? services = [];
   //FIREBASE CLASS FOR LONGITUDE AND LATITUDE
   final GeoPoint? location;
@@ -30,8 +34,10 @@ class MechanicModel {
     this.closingTime,
     this.address,
     this.location,
+    this.analytics,
     this.id,
     this.images,
+    this.isBusy = false,
     this.services,
   });
 
@@ -48,6 +54,7 @@ class MechanicModel {
       'id': id,
       'images': images,
       'services': services!.map((e) => e.toJson()).toList(),
+      'isBusy': isBusy,
     };
   }
 
@@ -64,6 +71,7 @@ class MechanicModel {
       closingTime: json['closingTime'],
       services: json['services'],
       images: json['images'],
+      isBusy: json['isBusy'],
     );
   }
 }

@@ -33,7 +33,7 @@ class _AddOnMapState extends State<AddOnMap> {
             showDialog(
                 context: context,
                 builder: (ctx) => AlertDialog(
-                      content:const Text('Confirm the location'),
+                      content: const Text('Confirm the location'),
                       actions: [
                         TextButton(
                           onPressed: () {
@@ -41,15 +41,16 @@ class _AddOnMapState extends State<AddOnMap> {
                             Navigator.of(context).pop();
                           },
                           child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 20),
-                              child:const Text('Yes')),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: const Text('Yes')),
                         ),
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
                           child: Container(
-                              margin:const EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 20),
                               child: const Text('No')),
                         ),
@@ -62,7 +63,8 @@ class _AddOnMapState extends State<AddOnMap> {
           zoomGesturesEnabled: true,
           myLocationButtonEnabled: true,
           initialCameraPosition: CameraPosition(
-              target: LatLng(_locationData!.latitude!, _locationData.longitude!),
+              target:
+                  LatLng(_locationData!.latitude!, _locationData.longitude!),
               zoom: 16),
         ),
       ),
