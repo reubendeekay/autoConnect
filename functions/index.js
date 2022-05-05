@@ -15,7 +15,7 @@ exports.lmno_callback_url = functions.https.onRequest(async (req, res) => {
 
     let uid = req.query.uid.split("/")[0];
    let amount = req.query.uid.split("/")[1];
-    
+   
     
 
     let lmnoResponse = admin.firestore().collection('transactions').doc('deposit').collection(uid).doc('/' + parsedData.checkoutRequestID + '/');

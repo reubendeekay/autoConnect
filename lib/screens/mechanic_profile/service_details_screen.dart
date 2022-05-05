@@ -165,22 +165,21 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
               width: double.infinity,
               child: RaisedButton(
                 onPressed: pay.services.isEmpty ||
-                        imageFiles.isEmpty ||
                         vehicleName == null ||
                         problem == null
                     ? null
                     : () async {
                         List<String> imageUrls = [];
-
-                        for (var file in imageFiles) {
-                          FirebaseStorage.instance
-                              .ref(
-                                  'requests/images/${DateTime.now().toIso8601String()}')
-                              .putFile(file)
-                              .then((value) => value.ref.getDownloadURL())
-                              .then((val) => imageUrls.add(val.toString()));
+                        if (imageFiles.isNotEmpty) {
+                          for (var file in imageFiles) {
+                            FirebaseStorage.instance
+                                .ref(
+                                    'requests/images/${DateTime.now().toIso8601String()}')
+                                .putFile(file)
+                                .then((value) => value.ref.getDownloadURL())
+                                .then((val) => imageUrls.add(val.toString()));
+                          }
                         }
-
                         final request = RequestModel(
                           date: _selectedDate ?? DateTime.now(),
                           createdAt: Timestamp.now(),

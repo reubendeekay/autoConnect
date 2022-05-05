@@ -506,7 +506,7 @@ class _MyTextFieldState extends State<MyTextField> {
         }
         return null;
       },
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
           hintText: widget.hint,
           border: InputBorder.none,

@@ -183,7 +183,7 @@ class MechanicProvider with ChangeNotifier {
 
   Future<void> payRequest(RequestModel booking) async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
-    final id = booking.id;
+    final id = booking.id!;
     await FirebaseFirestore.instance
         .collection('requests')
         .doc('mechanics')
@@ -262,6 +262,7 @@ class MechanicProvider with ChangeNotifier {
         .doc(id)
         .update({
       'status': 'reported',
+      'isBusy': false,
     });
     await FirebaseFirestore.instance
         .collection('userData')

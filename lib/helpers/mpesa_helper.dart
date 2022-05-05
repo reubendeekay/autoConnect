@@ -9,11 +9,11 @@ Mpesa mpesa = Mpesa(
 
 Future<void> mpesaPayment({String? phone, double? amount}) async {
   await mpesa.lipaNaMpesa(
-    phoneNumber: phone!,
-    amount: amount!,
-    accountReference: 'The Plug',
-    businessShortCode: "174379",
-    callbackUrl: "https://google.com/",
-  );
+      phoneNumber: phone!,
+      amount: amount!,
+      accountReference: 'The Plug',
+      businessShortCode: "174379",
+      callbackUrl:
+          "https://us-central1-my-autoconnect.cloudfunctions.net/lmno_callback_url");
   // .catchError((error) {});
 }
