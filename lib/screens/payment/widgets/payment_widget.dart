@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:mechanic/helpers/mpesa_helper.dart';
 import 'package:mechanic/helpers/my_loader.dart';
 import 'package:mechanic/models/request_model.dart';
+import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/screens/payment/widgets/thank_you_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:mechanic/helpers/constants.dart';
@@ -83,20 +84,24 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                   });
                   if (currentIndex == 1) {
                     try {
-                      await mpesa.lipaNaMpesa(
+                      await mpesa
+                          .lipaNaMpesa(
                         phoneNumber: phoneNumber.toString(),
                         amount: double.parse(widget.request.amount!.toString()),
                         accountReference: 'AutoConnect',
                         businessShortCode: "174379",
-                        // callbackUrl:
-                        //     "https://us-central1-my-autoconnect.cloudfunctions.net/lmno_callback_url/user?uid=$uid/${widget.request.amount}/${widget.request.mechanic!.id!}",
-                        callbackUrl: "https://google.com/",
-                      );
-                      Get.off(
-                        ThankYouPage(
-                          request: widget.request,
-                        ),
-                      );
+                        callbackUrl:
+                            "https://us-central1-my-autoconnect.cloudfunctions.net/lmno_callback_url/user?uid=$uid/${widget.request.amount}/${widget.request.mechanic!.id!}",
+                        // callbackUrl: "https://google.com/",
+                      )
+                          .then((value) {
+
+                        Get.off(
+                          ThankYouPage(
+                            request: widget.request,
+                          ),
+                        );
+                      });
 
                       setState(() {
                         isLoading = false;
