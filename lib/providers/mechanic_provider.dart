@@ -14,8 +14,10 @@ class MechanicProvider with ChangeNotifier {
   List<MechanicModel>? get mechanics => _mechanics;
 
   Future<void> getMechanics() async {
-    final results =
-        await FirebaseFirestore.instance.collection('mechanics').get();
+    final results = await FirebaseFirestore.instance
+        .collection('mechanics')
+        .where('status', isEqualTo: 'approved')
+        .get();
 
     List<AnalyticsModel> anaytics = [];
 

@@ -94,8 +94,8 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                             "https://us-central1-my-autoconnect.cloudfunctions.net/lmno_callback_url/user?uid=$uid/${widget.request.amount}/${widget.request.mechanic!.id!}",
                         // callbackUrl: "https://google.com/",
                       )
-                          .then((value) {
-
+                          .then((value) async {
+                        await Future.delayed(const Duration(seconds: 4));
                         Get.off(
                           ThankYouPage(
                             request: widget.request,
