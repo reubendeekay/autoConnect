@@ -84,8 +84,7 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                   });
                   if (currentIndex == 1) {
                     try {
-                      await mpesa
-                          .lipaNaMpesa(
+                      await mpesa.lipaNaMpesa(
                         phoneNumber: phoneNumber.toString(),
                         amount: double.parse(widget.request.amount!.toString()),
                         accountReference: 'AutoConnect',
@@ -93,25 +92,22 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                         callbackUrl:
                             "https://us-central1-my-autoconnect.cloudfunctions.net/lmno_callback_url/user?uid=$uid/${widget.request.amount}/${widget.request.mechanic!.id!}",
                         // callbackUrl: "https://google.com/",
-                      )
-                          .then((value) async {
-                        await Future.delayed(const Duration(seconds: 4));
-                        Get.off(
-                          ThankYouPage(
-                            request: widget.request,
-                          ),
-                        );
-                      });
+                      );
 
-                      setState(() {
-                        isLoading = false;
-                      });
-                    } catch (e) {
+                      await Future.delayed(const Duration(seconds: 2));
                       Get.off(
                         ThankYouPage(
                           request: widget.request,
                         ),
                       );
+
+                      setState(() {
+                        isLoading = false;
+                      });
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(e.toString()),
+                      ));
                     }
                   }
                   // await mpesaPayment(
