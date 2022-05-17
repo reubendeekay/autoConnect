@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/models/service_model.dart';
 import 'package:mechanic/models/user_model.dart';
+import 'package:mechanic/screens/auth/auth_exception.dart';
 
 final uid = FirebaseAuth.instance.currentUser!.uid;
 
@@ -17,35 +18,60 @@ class AuthProvider with ChangeNotifier {
   MechanicModel? get mechanic => _mechanic;
   //STEP 1
 
-  Future<void> login({String? email, String? password}) async {
-//FIREBASE LOGIN WITH EMAIL AND PASSWORD
+  Future<AuthResultStatus> login({String? email, String? password}) async {
+    UserCredential? _currentUser;
 
-    final UserCredential _currentUser = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email!, password: password!);
+    AuthResultStatus _status;
 
-    await FirebaseMessaging.instance.getToken().then((token) {
-      print('token: $token');
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({'pushToken': token});
-    }).catchError((err) {
-      print(err.message.toString());
-    });
+    try {
+      _currentUser = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email!, password: password!);
 
-    getCurrentUser(_currentUser.user!.uid);
+      if (_currentUser.user != null) {
+        _status = AuthResultStatus.successful;
+        await FirebaseMessaging.instance.getToken().then((token) {
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .update({'pushToken': token});
+        }).catchError((err) {});
+
+        await getCurrentUser(_currentUser.user!.uid);
+      } else {
+        _status = AuthResultStatus.undefined;
+      }
+    } catch (e) {
+      print('Exception @createAccount: $e');
+      _status = AuthExceptionHandler.handleException(e);
+      return _status;
+    }
 
     notifyListeners();
+    return _status;
   }
 
-  Future<void> signUp(
+  Future<AuthResultStatus> signUp(
       {String? email,
       String? password,
       String? fullName,
       String? phoneNumber}) async {
-    //FIREBASE SIGNUP WITH EMAIL AND PASSWORD
-    final UserCredential _currentUser = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email!, password: password!);
+    AuthResultStatus _status;
+    UserCredential? _currentUser;
+
+    try {
+      //FIREBASE SIGNUP WITH EMAIL AND PASSWORD
+      _currentUser = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email!, password: password!);
+      if (_currentUser.user != null) {
+        _status = AuthResultStatus.successful;
+      } else {
+        _status = AuthResultStatus.undefined;
+      }
+    } catch (e) {
+      print('Exception @createAccount: $e');
+      _status = AuthExceptionHandler.handleException(e);
+      return _status;
+    }
 
 //ENTERING USER DATA TO THE DATABASE FIRESTORE VIA SET METHOD
     await FirebaseFirestore.instance
@@ -74,6 +100,7 @@ class AuthProvider with ChangeNotifier {
     getCurrentUser(_currentUser.user!.uid);
 
     notifyListeners();
+    return _status;
   }
 
   Future<void> getCurrentUser(String userId) async {

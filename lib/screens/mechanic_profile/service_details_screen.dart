@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/helpers/distance.dart';
 import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/models/request_model.dart';
 import 'package:mechanic/models/service_model.dart';
@@ -189,7 +190,14 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                           mechanic: widget.mech,
                           problem: problem,
                           user: user,
-                          amount: pay.price.toStringAsFixed(2),
+                          amount: (pay.price +
+                                  (calculateDistance(
+                                          loc.latitude!,
+                                          loc.longitude!,
+                                          widget.mech.location!.latitude,
+                                          widget.mech.location!.longitude) *
+                                      20))
+                              .toStringAsFixed(2),
                           services: pay.services,
                           vehicleModel: vehicleName,
                           images: imageUrls,

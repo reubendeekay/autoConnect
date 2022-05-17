@@ -5,6 +5,7 @@ import 'package:mechanic/models/request_model.dart';
 import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/providers/mechanic_provider.dart';
 import 'package:mechanic/screens/payment/widgets/payment_screen.dart';
+import 'package:mechanic/screens/report_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -52,18 +53,8 @@ class UpdatedPayment extends StatelessWidget {
               children: [
                 RaisedButton(
                   onPressed: () async {
-                    await Provider.of<MechanicProvider>(context, listen: false)
-                        .reportPayment(request);
                     Navigator.of(context).pop();
-                    final Uri emailLaunchUri = Uri(
-                      scheme: 'mailto',
-                      path: 'admin@admin.com',
-                      query: encodeQueryParameters(<String, String>{
-                        'subject':
-                            'Report Mechanic ID:' + request.mechanic!.id!,
-                      }),
-                    );
-                    launch(emailLaunchUri.toString());
+                    Get.to(() => ReportScreen(request: request));
                   },
                   color: Colors.red,
                   child: const Text(

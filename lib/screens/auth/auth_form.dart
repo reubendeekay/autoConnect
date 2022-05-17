@@ -8,6 +8,7 @@ import 'package:mechanic/helpers/constants.dart';
 import 'package:mechanic/helpers/loading_screen.dart';
 import 'package:mechanic/helpers/my_loader.dart';
 import 'package:mechanic/providers/auth_provider.dart';
+import 'package:mechanic/screens/auth/auth_exception.dart';
 import 'package:mechanic/screens/auth/input_widget.dart';
 import 'package:mechanic/screens/drawer/hidden_drawer.dart';
 import 'package:provider/provider.dart';
@@ -134,34 +135,53 @@ class _LoginFormState extends State<LoginForm> {
                   final auth =
                       Provider.of<AuthProvider>(context, listen: false);
                   if (isLogin) {
-                    try {
-                      await auth.login(
-                        email: email!.trim(),
-                        password: password!.trim(),
-                      );
-
+                    final status = await auth.login(
+                      email: email!.trim(),
+                      password: password!.trim(),
+                    );
+                    if (status == AuthResultStatus.successful) {
                       Get.off(() => HidenDrawer());
-                    } catch (e) {
-                      setState(() {
-                        isLoading = false;
-                      });
-                    }
-                  } else {
-                    try {
-                      await auth.signUp(
-                        email: email!.trim(),
-                        password: password!.trim(),
-                        fullName: fullName,
-                        phoneNumber: phoneNumber!.trim(),
-                      );
+                    } else {
+                      final errorMsg =
+                          AuthExceptionHandler.generateExceptionMessage(status);
 
-                      Get.off(() => const InitialLoadingScreen());
-                    } catch (e) {
-                      print(e);
-                      setState(() {
-                        isLoading = false;
-                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            errorMsg,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                     }
+                    setState(() {
+                      isLoading = false;
+                    });
+                  } else {
+                    final status = await auth.signUp(
+                      email: email!.trim(),
+                      password: password!.trim(),
+                      fullName: fullName,
+                      phoneNumber: phoneNumber!.trim(),
+                    );
+                    if (status == AuthResultStatus.successful) {
+                      Get.off(() => const InitialLoadingScreen());
+                    } else {
+                      final errorMsg =
+                          AuthExceptionHandler.generateExceptionMessage(status);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text(errorMsg,
+                              style: const TextStyle(color: Colors.white)),
+                          duration: const Duration(seconds: 3),
+                        ),
+                      );
+                    }
+                    setState(() {
+                      isLoading = false;
+                    });
                   }
                 },
               ),

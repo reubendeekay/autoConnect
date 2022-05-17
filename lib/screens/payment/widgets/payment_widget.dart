@@ -83,32 +83,26 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                     isLoading = true;
                   });
                   if (currentIndex == 1) {
-                    try {
-                      await mpesa.lipaNaMpesa(
-                        phoneNumber: phoneNumber.toString(),
-                        amount: double.parse(widget.request.amount!.toString()),
-                        accountReference: 'AutoConnect',
-                        businessShortCode: "174379",
-                        callbackUrl:
-                            "https://us-central1-my-autoconnect.cloudfunctions.net/lmno_callback_url/user?uid=$uid/${widget.request.amount}/${widget.request.mechanic!.id!}",
-                        // callbackUrl: "https://google.com/",
-                      );
+                    await mpesa.lipaNaMpesa(
+                      phoneNumber: phoneNumber.toString(),
+                      amount: double.parse(widget.request.amount!.toString()),
+                      accountReference: 'AutoConnect',
+                      businessShortCode: "174379",
+                      callbackUrl:
+                          "https://us-central1-my-autoconnect.cloudfunctions.net/lmno_callback_url/user?uid=$uid/${widget.request.amount}/${widget.request.mechanic!.id!}",
+                      // callbackUrl: "https://google.com/",
+                    );
 
-                      await Future.delayed(const Duration(seconds: 2));
-                      Get.off(
-                        ThankYouPage(
-                          request: widget.request,
-                        ),
-                      );
+                    await Future.delayed(const Duration(seconds: 2));
+                    Get.off(
+                      ThankYouPage(
+                        request: widget.request,
+                      ),
+                    );
 
-                      setState(() {
-                        isLoading = false;
-                      });
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(e.toString()),
-                      ));
-                    }
+                    setState(() {
+                      isLoading = false;
+                    });
                   }
                   // await mpesaPayment(
                   //   amount:

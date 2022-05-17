@@ -8,7 +8,6 @@ class MechanicModel {
   final String? name;
   final String? profile;
   final File? profileFile;
-  final bool? isBusy;
   List<dynamic>? images = [];
   List<File>? fileImages = [];
   final String? phone;
@@ -16,9 +15,14 @@ class MechanicModel {
   final String? openingTime;
   final String? closingTime;
   final String? address;
-   AnalyticsModel? analytics;
-
+  final AnalyticsModel? analytics;
+  final String? status;
   List<dynamic>? services = [];
+  final String? nationalId;
+  final File? nationalIdFile;
+  final String? permit;
+  final File? permitFile;
+  final bool? isBusy;
   //FIREBASE CLASS FOR LONGITUDE AND LATITUDE
   final GeoPoint? location;
   final String? id;
@@ -32,13 +36,18 @@ class MechanicModel {
     this.fileImages,
     this.profileFile,
     this.closingTime,
+    this.analytics,
     this.address,
     this.location,
-    this.analytics,
+    this.status,
     this.id,
     this.images,
-    this.isBusy = false,
     this.services,
+    this.nationalId,
+    this.permit,
+    this.nationalIdFile,
+    this.isBusy,
+    this.permitFile,
   });
 
   Map<String, dynamic> toJson() {
@@ -51,14 +60,17 @@ class MechanicModel {
       'closingTime': closingTime,
       'address': address,
       'location': location,
+      'nationalId': nationalId,
+      'permit': permit,
       'id': id,
       'images': images,
-      'services': services!.map((e) => e.toJson()).toList(),
-      'isBusy': isBusy,
+      'status': 'pending',
+      'services':
+          services == null ? [] : services!.map((e) => e.toJson()).toList(),
     };
   }
 
-  factory MechanicModel.fromJson(Map<String, dynamic> json) {
+  factory MechanicModel.fromJson(dynamic json) {
     return MechanicModel(
       address: json['address'],
       name: json['name'],
@@ -71,6 +83,7 @@ class MechanicModel {
       closingTime: json['closingTime'],
       services: json['services'],
       images: json['images'],
+      status: json['status'],
       isBusy: json['isBusy'],
     );
   }
