@@ -398,6 +398,8 @@ class _MechanicRegisterScreenState extends State<MechanicRegisterScreen> {
                           services: services,
                           nationalIdFile: nationalId!,
                           permitFile: permit!,
+                          isBusy: false,
+                          status: 'pending',
                         ));
                         setState(() {
                           isLoading = false;
