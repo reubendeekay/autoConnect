@@ -17,7 +17,7 @@ class _ReviewContainerState extends State<ReviewContainer> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(const Duration(seconds: 6), () {
+    Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         isLoading = true;
       });

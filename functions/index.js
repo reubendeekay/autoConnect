@@ -115,7 +115,7 @@ exports.notifocations = functions.firestore
   
                     notification: {
                       id:'/notifications/'+doc.id,
-                      title: `${userFrom.data().fullName}`,
+                      title: 'AutoConnect',
                       body: message,
                       badge: '1',
                       sound: 'default'

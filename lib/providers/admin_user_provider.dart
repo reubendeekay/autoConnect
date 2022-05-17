@@ -49,13 +49,14 @@ class AdminUserProvider with ChangeNotifier {
       'location': mech.location,
       'profile': profileUrl,
       'images': imageUrls,
+      'status': mech.status,
       'services': mech.services!.isEmpty
           ? []
           : List.generate(
               mech.services!.length,
               (i) => {
                     'serviceName': mech.services![i].serviceName,
-                    'price': mech.services![i].amount,
+                    'price': mech.services![i].price,
                     'imageUrl': serviceUrls[i],
                     'id': UniqueKey().toString(),
                   }),

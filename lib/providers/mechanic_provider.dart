@@ -8,6 +8,7 @@ import 'package:mechanic/models/mechanic_model.dart';
 import 'package:mechanic/models/request_model.dart';
 import 'package:mechanic/models/review_model.dart';
 import 'package:mechanic/models/service_model.dart';
+import 'package:mechanic/models/transaction_model.dart';
 
 class MechanicProvider with ChangeNotifier {
   List<MechanicModel>? _mechanics;
@@ -194,6 +195,28 @@ class MechanicProvider with ChangeNotifier {
         .update({
       'status': 'paid',
     });
+    final amount = double.parse(booking.amount!);
+    await FirebaseFirestore.instance.doc('/account/finances').update({
+      'balance': FieldValue.increment(amount * 0.05),
+      'totalDisbursed': FieldValue.increment(amount),
+      'totalRevenue': FieldValue.increment(amount),
+    });
+    final transaction = TransactionModel(
+      amount: booking.amount,
+      id: id,
+      createdAt: Timestamp.now(),
+      customerName: booking.user!.fullName!,
+      mechanicId: booking.mechanic!.id!,
+      mechanicName: booking.mechanic!.name!,
+      name: booking.services!.first.serviceName,
+      profilePic: booking.services!.first.imageUrl,
+    );
+
+    await FirebaseFirestore.instance
+        .collection('transacations')
+        .doc(id)
+        .set(transaction.toJson());
+
     await FirebaseFirestore.instance
         .collection('userData')
         .doc('bookings')

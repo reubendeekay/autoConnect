@@ -197,7 +197,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                                           widget.mech.location!.latitude,
                                           widget.mech.location!.longitude) *
                                       20))
-                              .toStringAsFixed(2),
+                              .toStringAsFixed(0),
                           services: pay.services,
                           vehicleModel: vehicleName,
                           images: imageUrls,
