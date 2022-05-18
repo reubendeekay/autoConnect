@@ -13,6 +13,7 @@ import 'package:mechanic/providers/auth_provider.dart';
 import 'package:mechanic/providers/chat_provider.dart';
 import 'package:mechanic/providers/location_provider.dart';
 import 'package:mechanic/providers/mechanic_provider.dart';
+import 'package:mechanic/screens/home/arrived_widget.dart';
 import 'package:mechanic/screens/home/cancelled_widget.dart';
 import 'package:mechanic/screens/home/incoming_map.dart';
 import 'package:mechanic/screens/home/review_container.dart';
@@ -104,6 +105,12 @@ class _HomepageState extends State<Homepage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<DocumentSnapshot> allDocs = snapshot.data!.docs;
+                if (allDocs
+                    .where((element) => element['status'] == 'arrived')
+                    .isNotEmpty) {
+                  return const ArrivedWidget();
+                }
+
                 if (allDocs
                     .where((element) => element['status'] == 'denied')
                     .isNotEmpty) {

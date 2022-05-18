@@ -21,6 +21,18 @@ class AdminUserProvider with ChangeNotifier {
 
     //getting url of image
     String profileUrl = await profileResult.ref.getDownloadURL();
+    final permitResult = await FirebaseStorage.instance
+        .ref('mechanics/$uid/permit')
+        .putFile(mech.profileFile!);
+
+    //getting url of image
+    String permitUrl = await permitResult.ref.getDownloadURL();
+    final nationalResult = await FirebaseStorage.instance
+        .ref('mechanics/$uid/permit')
+        .putFile(mech.profileFile!);
+
+    //getting url of image
+    String nationalUrl = await nationalResult.ref.getDownloadURL();
 
     await Future.wait(mech.fileImages!.map((file) async {
       final result =
@@ -39,6 +51,7 @@ class AdminUserProvider with ChangeNotifier {
     });
 
 //UPLOADING mechanic Data TO FIREBASE DATABASE
+
     await FirebaseFirestore.instance.collection('mechanics').doc(uid).set({
       'name': mech.name,
       'phone': mech.phone,
@@ -48,8 +61,11 @@ class AdminUserProvider with ChangeNotifier {
       'closingTime': mech.closingTime,
       'location': mech.location,
       'profile': profileUrl,
+      'permit': permitUrl,
+      'nationalId': nationalUrl,
+      'status': 'pending',
       'images': imageUrls,
-      'status': mech.status,
+      'isBusy': false,
       'services': mech.services!.isEmpty
           ? []
           : List.generate(
@@ -61,9 +77,22 @@ class AdminUserProvider with ChangeNotifier {
                     'id': UniqueKey().toString(),
                   }),
     });
-    await FirebaseFirestore.instance.collection('users').doc(uid).update({
-      'isMechanic': true,
+
+    await FirebaseFirestore.instance
+        .collection('mechanics')
+        .doc(uid)
+        .collection('account')
+        .doc('analytics')
+        .set({
+      'requests': 0,
+      'rating': 0,
+      'ratingCount': 0,
+      'pendingRequests': 0,
+      'completedRequests': 0,
+      'balance': 0,
+      'totalEarnings': 0,
     });
+
     notifyListeners();
   }
 }

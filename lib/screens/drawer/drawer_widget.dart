@@ -4,6 +4,7 @@ import 'package:get/route_manager.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mechanic/providers/auth_provider.dart';
+import 'package:mechanic/screens/auth/auth_screen.dart';
 import 'package:mechanic/screens/chat/chat_screen.dart';
 import 'package:mechanic/screens/drawer/drawer_avatar.dart';
 import 'package:mechanic/screens/drawer/drawer_chart.dart';
@@ -57,6 +58,7 @@ class DrawerItems {
       icon: Icons.logout_outlined,
       onTap: () async {
         await FirebaseAuth.instance.signOut();
+        Get.offAll(() => const AuthScreen());
       });
   static final report = DrawerItem(
       title: "Support",

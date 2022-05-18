@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:mechanic/helpers/constants.dart';
+import 'package:mechanic/screens/mechanic_profile/widgets/add_on_map.dart';
 
 class MechanicUploadDocuments extends StatefulWidget {
   const MechanicUploadDocuments({Key? key, required this.onUpload})
@@ -45,10 +47,8 @@ class _MechanicUploadDocumentsState extends State<MechanicUploadDocuments> {
             },
             title: const Text('National ID/Passport'),
             subtitle: const Text('Upload your National ID/Passport'),
-            trailing: Icon(
-              Icons.check_circle,
-              color: nationalId != null ? Colors.green : Colors.grey,
-            ),
+            trailing: Icon(Icons.check_circle,
+                color: nationalId != null ? Colors.green : Colors.grey),
           ),
           ListTile(
             onTap: () async {
@@ -66,6 +66,17 @@ class _MechanicUploadDocumentsState extends State<MechanicUploadDocuments> {
             subtitle: const Text('Upload your Permit'),
             trailing: Icon(Icons.check_circle,
                 color: permit != null ? Colors.green : Colors.grey),
+          ),
+          ListTile(
+            onTap: () async {
+              Get.to(() => AddOnMap());
+            },
+            title: const Text('Garage Location'),
+            subtitle: const Text('Show your garage location'),
+            trailing: const Icon(
+              Icons.check_circle,
+              color: Colors.green,
+            ),
           ),
           const Spacer(),
           Container(
